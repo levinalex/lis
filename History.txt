@@ -1,0 +1,10 @@
+== 0.1.6 / 2007-09-11
+
+* change name of configuration file to ".liaison_labor"
+* change configuration keys to strings
+* honor HTTP endpoint given in configuration file
+
+== 0.1.5 / 2007-07-19
+
+* delete patient list on initialization
+

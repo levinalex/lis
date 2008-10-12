@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# start a process that continuously listens on a port and
+# processes packets
+#
+# see "./liaison_server -h" for help
+#
+require File.join(File.dirname(__FILE__),'..','lib','liaison_server.rb')
+Diasorin::LiaisonServer.new.run!
