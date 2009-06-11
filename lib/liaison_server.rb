@@ -14,7 +14,7 @@ class Hash
       options[(key.to_sym rescue key) || key] = value
     end
   end
-  
+
   def stringify_keys
     inject({}) do |options, (key, value)|
       options[key.to_s] = value
@@ -28,8 +28,8 @@ end
 module Diasorin
   ConfigFilename = ".liaison_server"
   ConfigFile = File.join(ENV['HOME'] || ENV['APPDATA'], ConfigFilename)
-  
-  # defaults are used when they are not overwritten in a config file 
+
+  # defaults are used when they are not overwritten in a config file
   # or with command line options
   #
   DefaultConfig = {
@@ -37,9 +37,9 @@ module Diasorin
     :baudrate => 9600,
     :uri => "http://localhost/liaison/"
   }
-  
+
   class LiaisonServer
-    
+
     # load configuration from configfile, merge with
     # default options
     #
@@ -47,26 +47,26 @@ module Diasorin
      # try to read configuration from file
       @options_from_file = YAML.load_file(ConfigFile) || {} rescue {}
       @options_from_file = @options_from_file.symbolize_keys
-      
+
       # if an option is not given on the command line
       # it is taken from the config file, or the default is used
       @options = Hash.new() { |h,k| @options_from_file[k] || DefaultConfig[k] }
     end
-   
+
     # parse command line options
-    # 
+    #
     def initialize
       load_configuration
 
       @opts = OptionParser.new do |opts|
-        
+
         opts.separator ""
         opts.separator "liaison_labor is an interface between the Liaison device connected via "
         opts.separator "serial port, and a worklist_manager HTTP-server"
         opts.separator ""
         opts.separator "configuration can be given in '#{ConfigFile}' "
         opts.separator ""
-        
+
         opts.on "-V","--version","Display version and exit" do
           puts "#{self.class} #{::LiaisonLabor::VERSION}"
           exit
@@ -81,19 +81,19 @@ module Diasorin
           @options[:endpoint] = arg
         end
         opts.on_tail "-p", "--print-config", "Print the current configuration",
-                                             "in a format that can be used as a configuration file" do 
+                                             "in a format that can be used as a configuration file" do
           puts @options_from_file.merge(@options).stringify_keys.to_yaml
           exit
         end
       end
     end
 
-    
+
     # open the serial port for reading and writing
     #
     # make sure that output buffering is disabled so that data
     # is sent immediately
-    # 
+    #
     def open_port(portfile, speed)
       system("stty -echo raw ospeed #{speed} ispeed #{speed} < #{portfile}")
       port = File.open(portfile, "w+")
@@ -105,14 +105,20 @@ module Diasorin
       port = open_port(@options[:serial_port], @options[:baudrate])
 
       client = Liaison::Interface.new(port) do |liaison|
-        
+
         # yields the barcode of a sample
         #
         # expects a hash consisting of patient information and a list
         # of requests for this patient
         #
         liaison.on_order_request do |barcode|
-          data = YAML.load(::Net::HTTP.get( URI.join(@options[:endpoint],"find_requests/",barcode) ))
+          begin
+            data = YAML.load(::Net::HTTP.get( URI.join(@options[:endpoint],"find_requests/",barcode) ))
+          rescue Exception => e
+            puts e
+            puts e.backtrace
+            data = nil
+          end
           p data
           data
         end
@@ -138,7 +144,7 @@ module Diasorin
           ::Net::HTTP.post_form(URI.join(@options[:endpoint], "result/", "#{URI.encode(barcode)}"), data.to_hash )
         end
       end
-      
+
       client.run
 
       puts "Listening on #{File.expand_path(port.path)}"

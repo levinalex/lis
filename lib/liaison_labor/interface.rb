@@ -59,7 +59,8 @@ module Diasorin
           puts "RequestInformation: #{p.inspect}"
 
           @patient_information ||= {}
-          @patient_information[p.sequence_number] = @on_order_request.call(p.starting_range)
+          requests = @on_order_request.call(p.starting_range)
+          @patient_information[p.sequence_number] = requests if requests
 
           @mode = :request_information
         end
