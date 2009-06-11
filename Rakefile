@@ -4,7 +4,7 @@ require 'spec/rake/spectask'
 
 require './lib/liaison_labor.rb'
 
-Hoe.new('LiaisonLabor', LiaisonLabor::VERSION) do |p|
+Hoe.new('liaison_labor', LiaisonLabor::VERSION) do |p|
   p.rubyforge_name = 'liaison_labor'
   p.summary = 'interfaces Liaison device to worklist_manager'
 
