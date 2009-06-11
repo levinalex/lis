@@ -12,6 +12,7 @@ class Hash
   def symbolize_keys
     inject({}) do |options, (key, value)|
       options[(key.to_sym rescue key) || key] = value
+      options
     end
   end
 
@@ -21,7 +22,6 @@ class Hash
       options
     end
   end
-
 end
 
 
@@ -35,7 +35,7 @@ module Diasorin
   DefaultConfig = {
     :serial_port => "/dev/ttyUSB0",
     :baudrate => 9600,
-    :uri => "http://localhost/liaison/"
+    :endpoint => "http://localhost/liaison/"
   }
 
   class LiaisonServer
@@ -50,7 +50,7 @@ module Diasorin
 
       # if an option is not given on the command line
       # it is taken from the config file, or the default is used
-      @options = Hash.new() { |h,k| @options_from_file[k] || DefaultConfig[k] }
+      @options = DefaultConfig.merge(@options_from_file)
     end
 
     # parse command line options
@@ -113,7 +113,8 @@ module Diasorin
         #
         liaison.on_order_request do |barcode|
           begin
-            data = YAML.load(::Net::HTTP.get( URI.join(@options[:endpoint],"find_requests/",barcode) ))
+            uri = URI.join(@options[:endpoint],"find_requests/",barcode) 
+            data = YAML.load(::Net::HTTP.get(uri)) 
           rescue Exception => e
             puts e
             puts e.backtrace
