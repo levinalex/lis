@@ -1,10 +1,12 @@
+# -*- encoding: utf-8 -*-
+
 Gem::Specification.new do |s|
   s.name = %q{LiaisonLabor}
-  s.version = "0.1.6"
+  s.version = "0.1.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Levin Alexander"]
-  s.date = %q{2008-10-12}
+  s.date = %q{2009-06-11}
   s.default_executable = %q{liaison_server}
   s.description = %q{An interface to the LIAISON® analyser by DiaSorin  <http://www.diasorin.com/en/productsandsystems/liaison>}
   s.email = ["mail@levinalex.net"]
@@ -16,19 +18,19 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--main", "README.txt"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{liaison_labor}
-  s.rubygems_version = %q{1.2.0}
+  s.rubygems_version = %q{1.3.1}
   s.summary = %q{interfaces Liaison device to worklist_manager}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 2
 
-    if current_version >= 3 then
-      s.add_development_dependency(%q<hoe>, [">= 1.8.0"])
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<hoe>, [">= 1.12.1"])
     else
-      s.add_dependency(%q<hoe>, [">= 1.8.0"])
+      s.add_dependency(%q<hoe>, [">= 1.12.1"])
     end
   else
-    s.add_dependency(%q<hoe>, [">= 1.8.0"])
+    s.add_dependency(%q<hoe>, [">= 1.12.1"])
   end
 end

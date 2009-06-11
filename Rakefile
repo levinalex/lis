@@ -7,7 +7,7 @@ require './lib/liaison_labor.rb'
 Hoe.new('LiaisonLabor', LiaisonLabor::VERSION) do |p|
   p.rubyforge_name = 'liaison_labor'
   p.summary = 'interfaces Liaison device to worklist_manager'
-  
+
   p.url = 'http://levinalex.net/src/liaison'
   p.developer('Levin Alexander', 'mail@levinalex.net')
   p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")

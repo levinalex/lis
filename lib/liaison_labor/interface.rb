@@ -11,7 +11,7 @@ module Diasorin
 
         # define default handlers for import/export of patients
         # and results
-        # 
+        #
         @on_order_request = lambda { nil }
 
         # is called whenever a result is sent
@@ -54,7 +54,7 @@ module Diasorin
           @on_result.call(@last_patient_packet, @last_order_packet, @last_result_record)
         end
 
-        
+
         add_receiver :request_information => Packets::RequestInformationSegment do |p|
           puts "RequestInformation: #{p.inspect}"
 
@@ -87,7 +87,7 @@ module Diasorin
             send_packet("\x05", :raw => true)
           end
         end
-        
+
         run
       end
 
@@ -115,8 +115,8 @@ module Diasorin
       end
 
     end
-    
-    
+
+
     class LiaisonProtocol
       STX = 0x02 # STX
       ETX = 0x03  # ETX
@@ -126,7 +126,7 @@ module Diasorin
       CR = 0x0d
       LF = 0x0a
       EOT = 0x04
-      
+
       def initialize(send_callback, receive_callback, options = {})
         @send_callback, @receive_callback = send_callback, receive_callback
         @packet_buffer = ""
@@ -135,7 +135,7 @@ module Diasorin
         @frame_number = 1
         @state = :neutral
       end
-      
+
       def self.checksum_valid?(string, expected)
         sum = string.to_enum(:each_byte).inject(ETX) { |s,v| s+v } % 0x100
         if sum == expected
@@ -206,7 +206,7 @@ module Diasorin
           end
         end
       end
-      
+
       def checksum(data)
         val = data.to_enum(:each_byte).inject(0) { |sum,b| sum+b } % 0x100
         val.to_s(16).rjust(2,'0')
@@ -221,7 +221,7 @@ module Diasorin
           @send_callback.call(data)
         else
           @frame_number ||= 1
-          
+
           data = "" << @frame_number.to_s << data
           packet_str = "" << "\x02" << data << "\r" << "\x03" << checksum("" << data << "\r\x03") << "\r\n"
           p "--~> #{packet_str.inspect}"
@@ -230,6 +230,6 @@ module Diasorin
           @frame_number = (@frame_number + 1) % 8
         end
       end
-    end 
+    end
   end
 end
