@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+
 require 'optparse'
 require 'net/http'
 require 'yaml'
-
-require 'rubygems'
 
 require File.join(File.dirname(__FILE__),'liaison_labor.rb')
 
@@ -24,6 +24,20 @@ class Hash
   end
 end
 
+class WorklistManager
+  def fetch(uri_str, limit = 10)
+    # You should choose better exception.
+    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+    response = Net::HTTP.get_response(URI.parse(uri_str))
+    case response
+    when Net::HTTPSuccess     then response
+    when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+    else
+      response.error!
+    end
+  end
+end
 
 module Diasorin
   ConfigFilename = ".liaison_server"
@@ -114,7 +128,10 @@ module Diasorin
         liaison.on_order_request do |barcode|
           begin
             uri = URI.join(@options[:endpoint],"find_requests/",barcode) 
-            data = YAML.load(::Net::HTTP.get(uri)) 
+	    result = WorklistManager.new.fetch(uri.to_s)
+
+            data = YAML.load(result.body) 
+	    data["id"] = barcode
           rescue Exception => e
             puts e
             puts e.backtrace
