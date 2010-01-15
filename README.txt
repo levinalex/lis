@@ -3,12 +3,12 @@ LiaisonLabor
     http://levinalex.net/src/liaison_labor
 
 == DESCRIPTION:
-  
-An interface to the LIAISON® analyser by DiaSorin 
+
+An interface to the LIAISON® analyser by DiaSorin
 <http://www.diasorin.com/en/productsandsystems/liaison>
 
 == FEATURES/PROBLEMS:
-  
+
 * not yet written
 
 == SYNOPSIS:

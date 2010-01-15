@@ -10,13 +10,13 @@ def has_header(packet, char)
 
   specify "different headers should not match" do
     instance_variable_get("@#{packet}").matches?("random garbage").should be_false
-  end  
+  end
 end
 
 def has_example(packet, example_str)
   specify "example should parse without errors" do
     lambda {
-      instance_variable_get("@#{packet}").from_str(example_str) 
+      instance_variable_get("@#{packet}").from_str(example_str)
       }.should_not raise_error
   end
 end
@@ -38,17 +38,17 @@ context "The MessageHeaderRecord packet from/to Liaison" do
     @packet = Liaison::Packets::MessageHeaderRecord
     @str = "H|\^&|||LaborEDV|||||Liaison|||1|19971113154903"
   end
-  
+
   has_header :packet, "H"
-  
+
   specify "should have a sender_id" do
     @packet.from_str(@str).sender_id.should == "LaborEDV"
   end
-  
+
   specify "should have a receiver_id" do
     @packet.from_str(@str).receiver_id.should == "Liaison"
   end
-  
+
   specify "should have a timestamp" do
     @packet.from_str(@str).timestamp.should == DateTime.new(1997,11,13,15,49,03)
   end
@@ -59,7 +59,7 @@ context "Building a MessageHeaderRecord" do
     @header = Liaison::Packets::MessageHeaderRecord
     @packet = @header.new("Sender","Receiver")
   end
-  
+
   specify "should build a correct packet" do
     @packet.to_s.should == "H|\\^&|||Sender|||||Receiver"
   end
@@ -73,7 +73,7 @@ context "the MessageTerminatorRecord packet to Liaison" do
   end
 
   has_header :terminator_record, "L"
-  
+
   specify "should have sequence number" do
     @packet.sequence_number.should == 1
   end
@@ -87,13 +87,13 @@ context "the PatientInformationRecord from/to Liaison" do
     @packet = Liaison::Packets::PatientInformationRecord
     @example = "P|1||PatID01||Meyer^Anna||19741001|F|||||MARTINEZ"
   end
-  
+
   has_header :packet, "P"
-  
+
   specify "should have a sequence number" do
     @packet.from_str(@example).sequence_number.should == 1
   end
-  
+
   specify "should have a patient ID" do
     @packet.from_str(@example).patient_id.should == "PatID01"
   end
@@ -117,7 +117,7 @@ context "building a PatientInformationRecord" do
     @record = Liaison::Packets::PatientInformationRecord
     @packet = @record.new(1, "000204060", "Sierra", "Rudolph")
   end
-  
+
   specify "should just work" do
     @packet.to_s.should == "P|1||000204060||Sierra^Rudolph"
   end
@@ -129,13 +129,13 @@ context "the RequestInformationSegment" do
     @str = "Q|1|Sample01||ALL||||||||O"
     @packet = @request_information.from_str(@str)
   end
-  
+
   has_header :request_information, "Q"
-  
+
   specify "should have a sequence number" do
     @packet.sequence_number.should == 1
   end
-  
+
   specify "should have starting range id" do
     @packet.starting_range.should == "Sample01"
   end
@@ -147,9 +147,9 @@ context "the TestOrderRecord from/to Liaison" do
     @example = "O|1|SampleID01||^^^AFP^1:10|N|19980506|||||||||S||||||||||X"
     @packet = @order_record.from_str(@example)
   end
-  
+
   has_header :order_record, "O"
-  
+
   specify "should have a sequence number" do
     @packet.sequence_number.should == 1
   end
@@ -190,9 +190,9 @@ context "the ResultRecord" do
     @example = "R|1|^^^AFP|0.20|IU/ml||<||F||||19980506123145|Liaison"
     @packet = @result_record.from_str(@example)
   end
-  
+
   has_header :result_record, "R"
-  
+
   specify "should have sequence number" do
     @packet.sequence_number.should == 1
   end
@@ -217,7 +217,7 @@ context "the ResultRecord" do
   specify "should have instrument" do
     @packet.instrument.should == "Liaison"
   end
-  
+
 end
 
 # TODO: empty result data should be allowed

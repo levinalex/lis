@@ -21,13 +21,13 @@ module Diasorin
 
         run
       end
-      
+
       def init
         send_packet :init
       end
 
       def result(pat_with_results)
-        
+
       end
 
       def next_patient nr
