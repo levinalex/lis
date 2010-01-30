@@ -1,1 +1,1 @@
-require 'immulite/protocol.rb'
+require 'immulite/server.rb'
