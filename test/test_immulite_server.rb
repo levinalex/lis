@@ -7,7 +7,7 @@ class TestImmuliteServer < Test::Unit::TestCase
       r1, w1 = IO.pipe # Immulite -> LIS
       r2, w2 = IO.pipe # LIS -> Immulite
 
-      @server = Immulite::Server.new(nil, r1, w2)
+      @server = LIS::Transfer::Server.new(LIS::Transfer::LineBasedProtocol.new, r1, w2)
       @device = Mock::Server.new(r2, w1)
     end
 

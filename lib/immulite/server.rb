@@ -1,28 +1,43 @@
 require 'strscan'
 
-class Immulite
+module LIS
+end
 
-  class Protocol
-    def initialize(string, &block)
+module LIS::Transfer
+
+  class BaseProtocol
+    def initialize(parent = nil)
+      @parent = parent
     end
 
-    def rest
+    def receive(memo, data)
+      if @parent
+        @memo = @parent.receive(memo, data) { |p| yield p }
+      end
+    end
+
+    def send(data)
+      @parent ? @parent.send(data) : data
     end
   end
 
-  module LineBasedProtocol
-    def self.call(data, &block)
-      scanner = StringScanner.new(data)
+  class LineBasedProtocol < BaseProtocol
+    def receive(memo, data, &block)
+      scanner = StringScanner.new(memo + data)
       while s = scanner.scan(/.*?\n/)
         yield s.strip
       end
       return scanner.rest
     end
+
+    def send(packet)
+      packet.to_s + "\n"
+    end
   end
 
   class Server
     def initialize(protocol, read, write = read)
-      @protocol = protocol || LineBasedProtocol
+      @protocol = protocol || LineBasedProtocol.new
       @read, @rite = read, write
       @buffer = ""
     end
@@ -33,13 +48,11 @@ class Immulite
 
     def run!
       while not @read.eof?
-        @buffer = @buffer + @read.readpartial(4096)
-        @buffer = @protocol.call(@buffer) do |p|
+        @buffer = @protocol.receive(@buffer, @read.readpartial(4096)) do |p|
           @callback.call(p)
         end
       end
     end
-
   end
 end
 
