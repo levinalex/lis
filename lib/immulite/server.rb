@@ -7,12 +7,13 @@ module LIS::Transfer
 
   class BaseProtocol
     def initialize(parent = nil)
+      @memo = ""
       @parent = parent
     end
 
-    def receive(memo, data)
+    def receive(data, &block)
       if @parent
-        @memo = @parent.receive(memo, data) { |p| yield p }
+        @parent.receive(data) { |p| yield p }
       end
     end
 
@@ -22,12 +23,13 @@ module LIS::Transfer
   end
 
   class LineBasedProtocol < BaseProtocol
-    def receive(memo, data, &block)
-      scanner = StringScanner.new(memo + data)
+    def receive(data, &block)
+      scanner = StringScanner.new(@memo + data)
       while s = scanner.scan(/.*?\n/)
         yield s.strip
       end
-      return scanner.rest
+      @memo = scanner.rest
+      nil
     end
 
     def send(packet)
@@ -38,8 +40,7 @@ module LIS::Transfer
   class Server
     def initialize(protocol, read, write = read)
       @protocol = protocol || LineBasedProtocol.new
-      @read, @rite = read, write
-      @buffer = ""
+      @read, @write = read, write
     end
 
     def on_packet(&block)
@@ -48,7 +49,7 @@ module LIS::Transfer
 
     def run!
       while not @read.eof?
-        @buffer = @protocol.receive(@buffer, @read.readpartial(4096)) do |p|
+        @protocol.receive(@read.readpartial(4096)) do |p|
           @callback.call(p)
         end
       end
