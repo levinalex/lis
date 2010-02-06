@@ -1,13 +1,13 @@
 require 'helper'
 
 class TestImmuliteServer < Test::Unit::TestCase
-
   context "a server" do
     setup do
       r1, w1 = IO.pipe # Immulite -> LIS
       r2, w2 = IO.pipe # LIS -> Immulite
-      @protocol = LIS::Transfer::LineBasedProtocol.new
-      @server = LIS::Transfer::Server.new(@protocol, r1, w2)
+
+      @server = LIS::Transfer::IOListener.new(r1, w2)
+      @protocol = LIS::Transfer::LineBasedProtocol.new(@server)
       @device = Mock::Server.new(r2, w1)
     end
 
@@ -17,7 +17,7 @@ class TestImmuliteServer < Test::Unit::TestCase
 
     should "yield packets written to it" do
       @packets = []
-      @server.on_packet { |packet| @packets << packet }
+      @protocol.on_data { |packet| @packets << packet }
 
       @device.write("fo").wait.write("o\n").wait.write("bar\n").eof
       @server.run!
@@ -26,7 +26,7 @@ class TestImmuliteServer < Test::Unit::TestCase
     end
 
     should "send data" do
-      @protocol.write("hello world")
+      @protocol << "hello world"
       data = @device.read_all
       assert_equal "hello world\n", data
     end

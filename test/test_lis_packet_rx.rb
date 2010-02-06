@@ -37,7 +37,8 @@ class TestLISPacketRX < Test::Unit::TestCase
 
   context "packetized protocol" do
     setup do
-      @protocol = LIS::Transfer::PacketizedProtocol.new
+      @sent = []
+      @protocol = LIS::Transfer::PacketizedProtocol.new(nil, @sent)
       @protocol.on_data do |d|
         @data = (@data || []) << d
       end
@@ -51,7 +52,7 @@ class TestLISPacketRX < Test::Unit::TestCase
     should "fire start_of_transmission event when receiving ENQ" do
       @protocol.receive("\005")
       assert_equal 1, @enq_counter
-      assert_equal ["\006"], @data
+      assert_equal ["\006"], @sent
     end
 
     should "fire end_of_transmission event after EOT is received" do
