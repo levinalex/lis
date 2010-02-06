@@ -1,16 +1,6 @@
 
 module LIS::Transfer
 
-  class ApplicationProtocol < LIS::Transfer::Base
-    def receive(message, &block)
-      elements = message.split(/|/)
-      sequence_number, header, data = message.scan(/^(.)(.)\|(.*)$/)[0]
-
-      sequence_number = sequence_number.to_i
-
-    end
-  end
-
   # splits a stream into immulite packets and only lets packets through
   # that are inside a session delimited by ENQ .. EOT
   #
@@ -18,7 +8,7 @@ module LIS::Transfer
   #
   # forwards everything else to higher layers
   #
-  class PacketizedProtocol < LIS::Transfer::Base
+  class PacketizedProtocol < Base
     ACK = "\006"
     NAK = "\025"
     ENQ = "\005"

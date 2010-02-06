@@ -1,9 +1,22 @@
 require 'strscan'
 
-module LIS
-end
-
 module LIS::Transfer
+
+  # a chainable IO-Listener that provides to methods:
+  #
+  # +on_data+ :: a callback that is called whenever a message is received
+  # +write+   :: can be called so send messages to the underlying IO
+  #
+  # when overriding this class, you need to implement two methods:
+  #
+  # +receive+ :: is called from an underlying IO whenever a message is received
+  #              the message can be handled, if messages should be propagated, you
+  #              need to call `forward`
+  #
+  # +write+ :: when data needs to be encoded, formatted before it can be send
+  #            send it with `super`
+  #
+  #
   class Base
     def initialize(read, write = read)
       @reader, @writer = read, write
@@ -33,6 +46,7 @@ module LIS::Transfer
     end
   end
 
+
   class LineBasedProtocol < Base
     def receive(data)
       @memo ||= ""
@@ -44,7 +58,7 @@ module LIS::Transfer
       nil
     end
 
-    def <<(data)
+    def write(data)
       super(data + "\n")
     end
   end
