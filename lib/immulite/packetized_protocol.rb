@@ -43,8 +43,7 @@ module LIS::Transfer
           when ENQ then transmission_start
           when EOT then transmission_end
         else
-          message_data = self.class.message_from_string(match)
-          received_message(message_data)
+          received_message(match)
         end
       end
       @memo = scanner.rest
@@ -68,7 +67,7 @@ module LIS::Transfer
 
     def received_message(message)
       return false unless @inside_transmission
-      forward(message_data)
+      forward(self.class.message_from_string(message))
     end
 
     def transmission_start

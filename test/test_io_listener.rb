@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestImmuliteServer < Test::Unit::TestCase
+class TestIOListener < Test::Unit::TestCase
   context "a server" do
     setup do
       r1, w1 = IO.pipe # Immulite -> LIS

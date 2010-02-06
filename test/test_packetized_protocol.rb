@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestLISPacketRX < Test::Unit::TestCase
+class TestPacketizedProtocol < Test::Unit::TestCase
 
   def self.gsub_nonprintable(str)
     str.gsub(/<[A-Z]+?>/) do |match|
@@ -74,6 +74,14 @@ class TestLISPacketRX < Test::Unit::TestCase
       @protocol.receive("\004")
       assert_equal 2, @enq_counter
       assert_equal 2, @eot_counter
+    end
+
+    should "propagate only packet data" do
+      @str = "\0021H|\\^&||DPC|Sender|111 Canfield Ave^Randolph^NJ^07869||(201)927-2828|N81|Receiver||P|1|20100206162019\r\0039C\r\n"
+      @protocol.receive("\005")
+      @protocol.receive(@str)
+
+      assert_equal ["1H|\\^&||DPC|Sender|111 Canfield Ave^Randolph^NJ^07869||(201)927-2828|N81|Receiver||P|1|20100206162019"], @data
     end
   end
 
