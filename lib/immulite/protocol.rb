@@ -7,10 +7,14 @@ module LIS::Transfer
   # forwards everything else to higher layers
   #
   class PacketizedProtocol < LIS::Transfer::BaseProtocol
-    RX = /(:?
-          \004 | # ENQ - start a transaction
-          \005 | # EOT - ends a transaction
-          (:?\002 .*? \015 \003 .+? \015 \012)) # a message with a checksum
+    ACK = "\006"
+    ENQ = "\005"
+    EOT = "\004"
+
+    RX = /(?:
+          \005 | # ENQ - start a transaction
+          \004 | # EOT - ends a transaction
+          (?:\002 (.*?) \015 \003 (.+?) \015 \012)) # a message with a checksum
         /xm
 
     def start_of_transmission(&block)
@@ -24,8 +28,14 @@ module LIS::Transfer
     def receive(data, &block)
       scanner = StringScanner.new(@memo + data)
       while match = scanner.scan(RX)
-        transmission_start if match == "\004"
-        transmission_end if match == "\005"
+        case match
+          when ENQ then transmission_start
+          when EOT then transmission_end
+        else
+          packet = RX.match(match)
+          p packet[1]
+          p packet[0]
+        end
       end
       @memo = scanner.rest
       nil
@@ -34,16 +44,33 @@ module LIS::Transfer
 
     private
 
+    def self.message_from_string(string)
+      match = string.match(RX)
+      data = match[1]
+      checksum = match[2]
+
+      expected_checksum = data.to_enum(:each_byte).inject(16) { |a,b| (a+b) % 0x100 }
+      actual_checksum = checksum.to_i(16)
+
+      raise "checksum mismatch" unless expected_checksum == actual_checksum
+
+      return [data]
+
+    end
+
     def transmission_start
       return false if @inside_transmission
       @on_transmission_start.call if @on_transmission_start
+      write ACK
       @inside_transmission = true
+      true
     end
 
     def transmission_end
       return false unless @inside_transmission
       @on_transmission_end.call
       @inside_transmission = false
+      true
     end
   end
 

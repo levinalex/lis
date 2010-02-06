@@ -6,8 +6,8 @@ class TestImmuliteServer < Test::Unit::TestCase
     setup do
       r1, w1 = IO.pipe # Immulite -> LIS
       r2, w2 = IO.pipe # LIS -> Immulite
-
-      @server = LIS::Transfer::Server.new(LIS::Transfer::LineBasedProtocol.new, r1, w2)
+      @protocol = LIS::Transfer::LineBasedProtocol.new
+      @server = LIS::Transfer::Server.new(@protocol, r1, w2)
       @device = Mock::Server.new(r2, w1)
     end
 
@@ -23,6 +23,12 @@ class TestImmuliteServer < Test::Unit::TestCase
       @server.run!
 
       assert_equal ["foo", "bar"], @packets
+    end
+
+    should "send data" do
+      @protocol.write("hello world")
+      data = @device.read_all
+      assert_equal "hello world\n", data
     end
   end
 end

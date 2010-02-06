@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestLISPacket < Test::Unit::TestCase
+class TestLISPacketRX < Test::Unit::TestCase
 
   def self.gsub_nonprintable(str)
     str.gsub(/<[A-Z]+?>/) do |match|
@@ -38,6 +38,9 @@ class TestLISPacket < Test::Unit::TestCase
   context "packetized protocol" do
     setup do
       @protocol = LIS::Transfer::PacketizedProtocol.new
+      @protocol.on_data do |d|
+        @data = (@data || []) << d
+      end
       @protocol.end_of_transmission do
         @eot_counter = (@eot_counter || 0) + 1
       end
@@ -46,27 +49,28 @@ class TestLISPacket < Test::Unit::TestCase
       end
     end
     should "fire start_of_transmission event when receiving ENQ" do
-      @protocol.receive("\004")
+      @protocol.receive("\005")
       assert_equal 1, @enq_counter
+      assert_equal ["\006"], @data
     end
 
     should "fire end_of_transmission event after EOT is received" do
-      @protocol.receive("\004\005")
+      @protocol.receive("\005\004")
       assert_equal 1, @eot_counter
     end
 
     should "not fire end_of_transmission event after EOT is received" do
-      @protocol.receive("\005")
+      @protocol.receive("\004")
       assert_equal nil, @eot_counter
     end
 
     should "fire trasmission events the correct number of times" do
-      @protocol.receive("\004\004")
-      @protocol.receive("\005")
+      @protocol.receive("\005\005")
+      @protocol.receive("\004")
       assert_equal 1, @enq_counter
       assert_equal 1, @eot_counter
-      @protocol.receive("\005\004")
-      @protocol.receive("\005")
+      @protocol.receive("\004\005")
+      @protocol.receive("\004")
       assert_equal 2, @enq_counter
       assert_equal 2, @eot_counter
     end

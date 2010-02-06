@@ -15,6 +15,10 @@ class Mock::Server
     self
   end
 
+  def read_all
+    @read.readpartial(4096)
+  end
+
   def wait(seconds = 0.02)
     @queue.push [:wait, seconds]
     self

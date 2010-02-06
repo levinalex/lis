@@ -17,8 +17,12 @@ module LIS::Transfer
       end
     end
 
-    def send(data)
-      @parent ? @parent.send(data) : data
+    def write(packet)
+      @on_send.call(packet)
+    end
+
+    def on_data(&block)
+      @on_send = block
     end
   end
 
@@ -32,8 +36,8 @@ module LIS::Transfer
       nil
     end
 
-    def send(packet)
-      packet.to_s + "\n"
+    def write(data)
+      super(data + "\n")
     end
   end
 
@@ -41,6 +45,9 @@ module LIS::Transfer
     def initialize(protocol, read, write = read)
       @protocol = protocol || LineBasedProtocol.new
       @read, @write = read, write
+      @protocol.on_data  { |str|
+        @write.write(str)
+      }
     end
 
     def on_packet(&block)
@@ -49,7 +56,8 @@ module LIS::Transfer
 
     def run!
       while not @read.eof?
-        @protocol.receive(@read.readpartial(4096)) do |p|
+        str = @read.readpartial(4096)
+        @protocol.receive(str) do |p|
           @callback.call(p)
         end
       end
