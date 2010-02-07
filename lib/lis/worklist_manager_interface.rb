@@ -1,3 +1,5 @@
+require 'net/http'
+
 class WorklistManagerInterface
   def initialize(endpoint)
     @endpoint = endpoint

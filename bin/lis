@@ -9,7 +9,7 @@ server = LIS::Transfer::IOListener.new(socket)
 packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)
 app_protocol = LIS::Transfer::ApplicationProtocol.new(packet_protocol)
 
-interface = WorklistManagerInterface.new("http://localhost:3000")
+interface = WorklistManagerInterface.new("http://localhost:3000/liaison/")
 
 app_protocol.on_request do |*args|
   p "ON REQUEST"
