@@ -128,10 +128,10 @@ module Diasorin
         liaison.on_order_request do |barcode|
           begin
             uri = URI.join(@options[:endpoint],"find_requests/",barcode)
-	    result = WorklistManager.new.fetch(uri.to_s)
+            result = WorklistManager.new.fetch(uri.to_s)
 
             data = YAML.load(result.body)
-	    data["id"] = barcode
+            data["id"] = barcode
           rescue Exception => e
             puts e
             puts e.backtrace
