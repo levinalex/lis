@@ -37,11 +37,24 @@ module LIS::Transfer
           when EOT then transmission_end
         else
           received_message(match)
-          write ACK
+          write :ack
         end
       end
       @memo = scanner.rest
       nil
+    end
+
+    def write(type, data = nil)
+      str = case type
+        when :ack then ACK
+        when :nak then NAK
+        when :begin then ENQ
+        when :idle then EOT
+        when :message then
+      else
+        raise ArgumentError
+      end
+      super(str)
     end
 
 
@@ -66,7 +79,7 @@ module LIS::Transfer
 
     def transmission_start
       return false if @inside_transmission
-      write ACK
+      write :ack
       forward :begin
       @inside_transmission = true
       true

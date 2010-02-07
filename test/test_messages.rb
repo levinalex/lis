@@ -21,6 +21,22 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     end
   end
 
+  context "parsing an order message" do
+    setup do
+      @str = "3O|1|8780||^^^ATA|R|||||||||||||||||||B0135"
+      @message = LIS::Message::Base.from_string(@str)
+    end
+
+    should "have correct type" do
+      assert_equal LIS::Message::Order, @message.type
+      assert_equal "O", @message.type_id
+    end
+
+    should "have correct speciment id" do
+      assert_equal "8780", @message.specimen_id
+    end
+  end
+
   context "parsing a result message" do
     setup do
       @str = "7R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135"
@@ -30,6 +46,10 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     should "have correct type" do
       assert_equal LIS::Message::Result, @message.type
       assert_equal "R", @message.type_id
+    end
+
+    should "have correct timestamp" do
+      assert_equal "2010-01-15T10:56:36+00:00", @message.test_started_at.to_s
     end
 
     should "have correct test id" do

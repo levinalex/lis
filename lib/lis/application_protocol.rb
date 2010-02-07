@@ -10,7 +10,6 @@ module LIS::Transfer
       @on_request_callback = block
     end
 
-
     def received_header(message)
       @patient_information ||= {} # delete the list of patients
     end
@@ -59,6 +58,7 @@ module LIS::Transfer
           @last_order = nil
         when :idle
         when :message
+          p message
           @message = LIS::Message::Base.from_string(message)
           handler = @handlers[@message.class]
           send(handler, @message) if handler

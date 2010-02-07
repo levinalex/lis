@@ -19,22 +19,24 @@ class WorklistManagerInterface
   def send_result(patient, order, result)
     barcode = order.specimen_id
     data = {
-      "test_name" => order.test_id,
-      "value" => result.value,
+      "test_name" => order.universal_test_id,
+      "value" => result.result_value,
       "unit" => result.unit,
       "status" => result.result_status,
       "flags" => result.abnormal_flags,
-      "result_timestamp" => result.timestamp
+      "result_timestamp" => result.test_completed_at
     }
 
-    Net::HTTP.post_form(URI.join(@endpoint, "result/#{URI.encode(barcode)}"), data.to_hash)
+    p data
+
+    # Net::HTTP.post_form(URI.join(@endpoint, "result/#{URI.encode(barcode)}"), data.to_hash)
   end
 
 
   private
 
   def fetch_with_redirect(uri_str, limit = 10)
-    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+    raise ArgumentError, 'too many HTTP redirects' if limit == 0
 
     response = Net::HTTP.get_response(URI.parse(uri_str))
     case response

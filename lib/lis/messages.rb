@@ -1,9 +1,11 @@
+require 'date'
 
 module LIS::Message
   module ClassMethods
-    FIELD_TYPES = {
+    CONVERSION_WRITER = {
       :string => lambda { |s| s },
-      :int => lambda { |s| s.to_i }
+      :int => lambda { |s| s.to_i },
+      :timestamp => lambda { |s| DateTime.strptime(s, "%Y%m%d%H%M%S") }
     }
 
     def from_string(message)
@@ -19,7 +21,8 @@ module LIS::Message
       data.each_with_index do |val, index|
         klass.get_named_field_attributes(index + 2)
         if field = klass.get_named_field_attributes(index+2)
-          obj.send(:"#{field[:name]}=", FIELD_TYPES[field[:type]].call(val))
+          converter = CONVERSION_WRITER[field[:type]]
+          obj.send(:"#{field[:name]}=", converter.call(val))
         end
       end
 
@@ -91,11 +94,14 @@ module LIS::Message
 
   class Result < Base
     type_id "R"
-    named_field 3, :universal_test_id
-    named_field 4, :result_value
-    named_field 5, :unit
-    named_field 6, :reference_ranges
-    named_field 7, :abnormal_flags
+    named_field  3, :universal_test_id
+    named_field  4, :result_value
+    named_field  5, :unit
+    named_field  6, :reference_ranges
+    named_field  7, :abnormal_flags
+    named_field  9, :result_status
+    named_field 12, :test_started_at, :timestamp
+    named_field 13, :test_completed_at, :timestamp
   end
 
   class Patient < Base
