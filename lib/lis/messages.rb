@@ -20,7 +20,8 @@ module LIS::Message
       # populate named fields
       data.each_with_index do |val, index|
         klass.get_named_field_attributes(index + 2)
-        if field = klass.get_named_field_attributes(index+2)
+        field = klass.get_named_field_attributes(index+2)
+        if field
           converter = CONVERSION_WRITER[field[:type]]
           obj.send(:"#{field[:name]}=", converter.call(val))
         end
@@ -31,6 +32,12 @@ module LIS::Message
 
     def initialize_from_message(*list_of_fields)
     end
+
+    def named_field(idx, name, type = :string)
+      set_named_field_attributes(idx, :name => name, :type => type)
+      attr_accessor name
+    end
+
 
     protected
 
@@ -46,11 +53,6 @@ module LIS::Message
       @@messages_by_type[char] = self
     end
 
-    def named_field(idx, name, type = :string)
-      set_named_field_attributes(idx, :name => name, :type => type)
-      attr_accessor name
-    end
-
     def get_named_field_attributes(key)
       @field_names ||= {}
       val = (@field_names || {})[key]
@@ -60,9 +62,9 @@ module LIS::Message
 
     private
 
-    def set_named_field_attributes(key, *val)
+    def set_named_field_attributes(key, hash)
       @field_names ||= {}
-      @field_names[key] = *val
+      @field_names[key] = hash
     end
   end
 
