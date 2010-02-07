@@ -38,50 +38,43 @@ class TestPacketizedProtocol < Test::Unit::TestCase
   context "packetized protocol" do
     setup do
       @sent = []
+      @data = []
       @protocol = LIS::Transfer::PacketizedProtocol.new(nil, @sent)
-      @protocol.on_data do |d|
-        @data = (@data || []) << d
-      end
-      @protocol.end_of_transmission do
-        @eot_counter = (@eot_counter || 0) + 1
-      end
-      @protocol.start_of_transmission do
-        @enq_counter = (@enq_counter || 0) + 1
+      @protocol.on_data do |*d|
+        @data << d
       end
     end
     should "fire start_of_transmission event when receiving ENQ" do
       @protocol.receive("\005")
-      assert_equal 1, @enq_counter
-      assert_equal ["\006"], @sent
+      assert_equal [[:begin]], @data
     end
 
     should "fire end_of_transmission event after EOT is received" do
       @protocol.receive("\005\004")
-      assert_equal 1, @eot_counter
+      assert_equal [[:begin], [:idle]], @data
     end
 
     should "not fire end_of_transmission event after EOT is received" do
       @protocol.receive("\004")
-      assert_equal nil, @eot_counter
+      assert_equal [], @data
     end
 
     should "fire trasmission events the correct number of times" do
       @protocol.receive("\005\005")
       @protocol.receive("\004")
-      assert_equal 1, @enq_counter
-      assert_equal 1, @eot_counter
+      assert_equal [[:begin], [:idle]], @data
       @protocol.receive("\004\005")
       @protocol.receive("\004")
-      assert_equal 2, @enq_counter
-      assert_equal 2, @eot_counter
+      assert_equal [[:begin], [:idle], [:begin], [:idle]], @data
     end
 
     should "propagate only packet data" do
-      @str = "\0021H|\\^&||DPC|Sender|111 Canfield Ave^Randolph^NJ^07869||(201)927-2828|N81|Receiver||P|1|20100206162019\r\0039C\r\n"
+      @str = "\0023L|1\r\0033C\r\n"
       @protocol.receive("\005")
       @protocol.receive(@str)
+      @protocol.receive("\004")
 
-      assert_equal ["1H|\\^&||DPC|Sender|111 Canfield Ave^Randolph^NJ^07869||(201)927-2828|N81|Receiver||P|1|20100206162019"], @data
+      assert_equal [[:begin], [:message, "3L|1"], [:idle]], @data
     end
   end
 

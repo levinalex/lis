@@ -9,6 +9,22 @@ server = LIS::Transfer::IOListener.new(socket)
 packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)
 app_protocol = LIS::Transfer::ApplicationProtocol.new(packet_protocol)
 
+interface = WorklistManagerInterface.new("http://localhost:3000")
+
+app_protocol.on_request do |*args|
+  p "ON REQUEST"
+  p args
+
+  nil
+#  interface.load_reqests(*args)
+end
+
+app_protocol.on_result do |*args|
+  p "SEND RESULT"
+  p args
+  interface.send_result(*args)
+end
+
 app_protocol.on_data do |data|
   p data
 end

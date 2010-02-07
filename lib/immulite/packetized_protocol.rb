@@ -4,9 +4,12 @@ module LIS::Transfer
   # splits a stream into immulite packets and only lets packets through
   # that are inside a session delimited by ENQ .. EOT
   #
-  # check the checksum and acknowledgement of messages
+  # check the checksum and do acknowledgement of messages
   #
-  # forwards everything else to higher layers
+  # forwards the following events:
+  #
+  # - :message, String :: when a message is received
+  # - :idle            :: when a transmission is finished (after EOT is received)
   #
   class PacketizedProtocol < Base
     ACK = "\006"
@@ -24,16 +27,6 @@ module LIS::Transfer
       super(*args)
       @memo = ""
       @inside_transmission = false
-      @on_transmission_start = lambda {}
-      @on_transmission_end = lambda {}
-    end
-
-    def start_of_transmission(&block)
-      @on_transmission_start = block
-    end
-
-    def end_of_transmission(&block)
-      @on_transmission_end = block
     end
 
     def receive(data)
@@ -68,20 +61,20 @@ module LIS::Transfer
 
     def received_message(message)
       return false unless @inside_transmission
-      forward(self.class.message_from_string(message))
+      forward(:message, self.class.message_from_string(message))
     end
 
     def transmission_start
       return false if @inside_transmission
-      @on_transmission_start.call if @on_transmission_start
       write ACK
+      forward :begin
       @inside_transmission = true
       true
     end
 
     def transmission_end
       return false unless @inside_transmission
-      @on_transmission_end.call
+      forward :idle
       @inside_transmission = false
       true
     end
