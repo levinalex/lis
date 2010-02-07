@@ -1,11 +1,16 @@
 #!/usr/bin/env ruby -w
 require 'lib/immulite.rb'
 
-protocol = LIS::Transfer::PacketizedProtocol.new
+# protocol = LIS::Transfer::PacketizedProtocol.new
+# server = LIS::Transfer::Server.new(protocol, socket)
+
 socket = File.open("/dev/cu.usbserial-FTC95RQI", "w+")
-server = LIS::Transfer::Server.new(protocol, socket)
+server = LIS::Transfer::IOListener.new(socket)
+packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)
+app_protocol = LIS::Transfer::ApplicationProtocol.new(packet_protocol)
+
+app_protocol.on_data do |data|
+  p data
+end
 
 server.run!
-
-server = LIS::Transfer::Server.new
-packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)

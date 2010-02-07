@@ -44,6 +44,7 @@ module LIS::Transfer
           when EOT then transmission_end
         else
           received_message(match)
+          write ACK
         end
       end
       @memo = scanner.rest

@@ -1,6 +1,5 @@
 
 module LIS::Message
-
   module ClassMethods
     FIELD_TYPES = {
       :string => lambda { |s| s },
@@ -16,8 +15,10 @@ module LIS::Message
       obj.frame_number = frame_number
       obj.type_id = type
 
+      # populate named fields
       data.each_with_index do |val, index|
-        if field = get_named_field_attributes(index+1)
+        klass.get_named_field_attributes(index + 2)
+        if field = klass.get_named_field_attributes(index+2)
           obj.send(:"#{field[:name]}=", FIELD_TYPES[field[:type]].call(val))
         end
       end
@@ -47,13 +48,14 @@ module LIS::Message
       attr_accessor name
     end
 
+    def get_named_field_attributes(key)
+      @field_names ||= {}
+      val = (@field_names || {})[key]
+      val ||= superclass.get_named_field_attributes(key) if superclass.respond_to?(:get_named_field_attributes)
+      val
+    end
 
     private
-
-    def get_named_field_attributes(key)
-      parent_field_names = superclass.respond_to?(:get_field_names) ? superclass.field_names : {}
-      parent_field_names.merge(@field_names || {})[key]
-    end
 
     def set_named_field_attributes(key, *val)
       @field_names ||= {}
@@ -63,12 +65,47 @@ module LIS::Message
 
   class Base
     extend ClassMethods
-
     attr_accessor :frame_number
     attr_accessor :type_id
 
-    named_field 1, :sequence_number, :int
+    named_field 2, :sequence_number, :int
   end
+
+
+  class Header < Base
+    type_id "H"
+    named_field  2, :delimiter_definition
+    named_field  4, :access_password
+    named_field  5, :sender_name
+    named_field 10, :receiver_id
+  end
+
+  class Order < Base
+    type_id "O"
+    named_field 3, :specimen_id
+    named_field 5, :universal_test_id
+    named_field 6, :priority
+    named_field 7, :requested_at
+    named_field 8, :collected_at
+  end
+
+  class Result < Base
+    type_id "R"
+    named_field 3, :universal_test_id
+    named_field 4, :result_value
+    named_field 5, :unit
+    named_field 6, :reference_ranges
+    named_field 7, :abnormal_flags
+  end
+
+  class Patient < Base
+    type_id "P"
+  end
+
+  class Query < Base
+    type_id "Q"
+  end
+
 
   class TerminatorRecord < Base
     TERMINATION_CODES = {
@@ -82,7 +119,7 @@ module LIS::Message
     }
 
     type_id "L"
-    named_field 2, :termination_code
+    named_field 3, :termination_code
   end
 
 end
