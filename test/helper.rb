@@ -5,7 +5,7 @@ require 'lib/mock_server'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'immulite'
+require 'lis'
 
 class Test::Unit::TestCase
 end

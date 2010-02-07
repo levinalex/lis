@@ -4,11 +4,11 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "immulite"
+    gem.name = "lis"
     gem.summary = %Q{TODO: one-line summary of your gem}
     gem.description = %Q{TODO: longer description of your gem}
     gem.email = "mail@levinalex.net"
-    gem.homepage = "http://github.com/levinalex/immulite"
+    gem.homepage = "http://github.com/levinalex/lis"
     gem.authors = ["Levin Alexander"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_development_dependency "yard", ">= 0"

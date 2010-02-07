@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
-require 'immulite'
+require 'lis'
 
 require 'test/unit/assertions'
 

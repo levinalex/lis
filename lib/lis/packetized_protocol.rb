@@ -1,7 +1,7 @@
 
 module LIS::Transfer
 
-  # splits a stream into immulite packets and only lets packets through
+  # splits a stream into lis packets and only lets packets through
   # that are inside a session delimited by ENQ .. EOT
   #
   # check the checksum and do acknowledgement of messages

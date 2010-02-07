@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby -w
-require 'lib/immulite.rb'
+require 'lib/lis.rb'
 
 # protocol = LIS::Transfer::PacketizedProtocol.new
 # server = LIS::Transfer::Server.new(protocol, socket)
