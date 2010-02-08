@@ -28,7 +28,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     end
 
     should "have correct type" do
-      assert_equal LIS::Message::Order, @message.type
+      assert_equal LIS::Message::Order, @message.class
       assert_equal "O", @message.type_id
     end
 
@@ -44,7 +44,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     end
 
     should "have correct type" do
-      assert_equal LIS::Message::Result, @message.type
+      assert_equal LIS::Message::Result, @message.class
       assert_equal "R", @message.type_id
     end
 
