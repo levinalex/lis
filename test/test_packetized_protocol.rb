@@ -74,7 +74,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
       @protocol.receive(@str)
       @protocol.receive("\004")
 
-      assert_equal [[:begin], [:message, "3L|1"], [:idle]], @data
+      assert_equal [[:begin], [:message, "L|1"], [:idle]], @data
     end
   end
 

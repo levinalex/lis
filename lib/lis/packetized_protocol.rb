@@ -20,7 +20,11 @@ module LIS::Transfer
     RX = /(?:
           \005 | # ENQ - start a transaction
           \004 | # EOT - ends a transaction
-          (?:\002 (.*?) \015 \003 (.+?) \015 \012)) # a message with a checksum
+          (?:\002 (.) (.*?) \015 \003 (.+?) \015 \012) # a message with a checksum
+                #  |   |               `-- checksum
+                #  |   `------------------ message
+                #  `---------------------- frame number
+          )
         /xm
 
     def initialize(*args)
@@ -62,19 +66,24 @@ module LIS::Transfer
 
     def self.message_from_string(string)
       match = string.match(RX)
-      data = match[1]
-      checksum = match[2]
 
-      expected_checksum = data.to_enum(:each_byte).inject(16) { |a,b| (a+b) % 0x100 }
+      frame_number = match[1]
+      data = match[2]
+      checksum = match[3]
+
+      expected_checksum = (frame_number + data).to_enum(:each_byte).
+                            inject(16) { |a,b| (a+b) % 0x100 }
       actual_checksum   = checksum.to_i(16)
 
       raise "checksum mismatch" unless expected_checksum == actual_checksum
-      return data
+      return [frame_number.to_i, data]
+    end
     end
 
     def received_message(message)
       return false unless @inside_transmission
-      forward(:message, self.class.message_from_string(message))
+      frame_number, message = *self.class.message_from_string(message)
+      forward(:message, message)
     end
 
     def transmission_start

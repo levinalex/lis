@@ -1,14 +1,10 @@
 require 'helper'
 
-class TestPacketizedProtocol < Test::Unit::TestCase
+class TestMessages < Test::Unit::TestCase
 
   context "message parsing" do
     setup do
-      @message = LIS::Message::Base.from_string("3L|1|N")
-    end
-
-    should "have correct frame number" do
-      assert_equal 3, @message.frame_number
+      @message = LIS::Message::Base.from_string("L|1|N")
     end
 
     should "have correct type" do
@@ -23,7 +19,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
 
   context "parsing an order message" do
     setup do
-      @str = "3O|1|8780||^^^ATA|R|||||||||||||||||||B0135"
+      @str = "O|1|8780||^^^ATA|R|||||||||||||||||||B0135"
       @message = LIS::Message::Base.from_string(@str)
     end
 
@@ -39,7 +35,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
 
   context "parsing a result message" do
     setup do
-      @str = "7R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135"
+      @str = "R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135"
       @message = LIS::Message::Base.from_string(@str)
     end
 

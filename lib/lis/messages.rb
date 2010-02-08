@@ -9,12 +9,11 @@ module LIS::Message
     }
 
     def from_string(message)
-      frame_number, type, data = parse(message)
+      type, data = parse(message)
       klass = (@@messages_by_type || {})[type]
       raise "unknown message type #{type.inspect}" unless klass
 
       obj = klass.allocate
-      obj.frame_number = frame_number
       obj.type_id = type
 
       # populate named fields
@@ -42,10 +41,10 @@ module LIS::Message
     protected
 
     def parse(string)
-      frame_number, type, data = string.scan(/^(.)(.)\|(.*)$/)[0]
+      type, data = string.scan(/^(.)\|(.*)$/)[0]
       data = data.split(/\|/)
 
-      return [frame_number.to_i, type, data]
+      return [type, data]
     end
 
     def type_id(char)
