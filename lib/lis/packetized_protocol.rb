@@ -56,9 +56,13 @@ module LIS::Transfer
       str = case type
         when :ack then ACK
         when :nak then NAK
-        when :begin then ENQ
+        when :begin then
+          @frame_number = 0
+          ENQ
         when :idle then EOT
         when :message then
+          @frame_number = (@frame_number + 1) % 8
+          self.class.wrap_message(data, @frame_number)
       else
         raise ArgumentError
       end
@@ -75,7 +79,7 @@ module LIS::Transfer
       data = match[2]
       checksum = match[3]
 
-      expected_checksum = (frame_number + data).to_enum(:each_byte).
+      expected_checksum = (frame_number + data).each_byte.
                             inject(16) { |a,b| (a+b) % 0x100 }
       actual_checksum   = checksum.to_i(16)
 
@@ -83,8 +87,12 @@ module LIS::Transfer
       return [frame_number.to_i, data]
     end
 
-    def self.wrap_message(string, sequence_number)
+    def self.wrap_message(string, frame_number)
+      frame_number = (frame_number % 8).to_s
+      checksum = (frame_number + string).each_byte.inject(16) { |a,b| (a+b) % 0x100 }
+      checksum = checksum.to_s(16).upcase.rjust(2,"0")
 
+      "\002#{frame_number}#{string}\015\003#{checksum}\015\012"
     end
 
     def received_message(message)

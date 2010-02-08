@@ -81,6 +81,18 @@ class TestPacketizedProtocol < Test::Unit::TestCase
 
       assert_equal [[:begin], [:message, "L|1"], [:idle]], @data
     end
+
+    should "add frame number and checksum when sending a message" do
+      @protocol.write(:begin)
+      @protocol.write(:message, "O|1|130000911||^^^E2")
+      @protocol.write(:message, "L|1")
+      @protocol.write(:idle)
+
+      assert_equal ["\005",
+                    "\0021O|1|130000911||^^^E2\r\00301\r\n",
+                    "\0022L|1\r\0033B\r\n",
+                    "\004"], @sent
+    end
   end
 
 end
