@@ -54,6 +54,11 @@ class TestPacketizedProtocol < Test::Unit::TestCase
       assert_equal [[:begin], [:idle]], @data
     end
 
+    should "ignore AKS and NAKs" do
+      @protocol.receive("\005\006\025\004")
+      assert_equal [[:begin], [:idle]], @data
+    end
+
     should "not fire end_of_transmission event after EOT is received" do
       @protocol.receive("\004")
       assert_equal [], @data

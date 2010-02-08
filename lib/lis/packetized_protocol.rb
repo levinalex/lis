@@ -20,6 +20,8 @@ module LIS::Transfer
     RX = /(?:
           \005 | # ENQ - start a transaction
           \004 | # EOT - ends a transaction
+          \005 | # ACK
+          \025 | # NAK
           (?:\002 (.) (.*?) \015 \003 (.+?) \015 \012) # a message with a checksum
                 #  |   |               `-- checksum
                 #  |   `------------------ message
@@ -35,10 +37,12 @@ module LIS::Transfer
 
     def receive(data)
       scanner = StringScanner.new(@memo + data)
-      while match = scanner.scan(RX)
+      while scanner.scan_until(RX)
+        match = scanner.matched
         case match
           when ENQ then transmission_start
           when EOT then transmission_end
+          when ACK, NAK then nil
         else
           received_message(match)
           write :ack
@@ -78,6 +82,9 @@ module LIS::Transfer
       raise "checksum mismatch" unless expected_checksum == actual_checksum
       return [frame_number.to_i, data]
     end
+
+    def self.wrap_message(string, sequence_number)
+
     end
 
     def received_message(message)
