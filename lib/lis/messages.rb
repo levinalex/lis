@@ -95,7 +95,7 @@ module LIS::Message
 
   class Result < Base
     type_id "R"
-    named_field  3, :universal_test_id
+    named_field  3, :universal_test_id_internal
     named_field  4, :result_value
     named_field  5, :unit
     named_field  6, :reference_ranges
@@ -103,6 +103,14 @@ module LIS::Message
     named_field  9, :result_status
     named_field 12, :test_started_at, :timestamp
     named_field 13, :test_completed_at, :timestamp
+
+    def universal_test_id
+      universal_test_id_internal.gsub(/\^/,"")
+    end
+    def universal_test_id=(val)
+      universal_test_id_internal = "^^^#{val}"
+    end
+
   end
 
   class Patient < Base
@@ -111,6 +119,14 @@ module LIS::Message
 
   class Query < Base
     type_id "Q"
+    named_field 3, :starting_range_id_internal
+
+    def starting_range_id
+      starting_range_id_internal.gsub(/\^/,"")
+    end
+    def starting_range_id=(val)
+      starting_range_id_internal = "^#{val}"
+    end
   end
 
 
