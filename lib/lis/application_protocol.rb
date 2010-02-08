@@ -1,6 +1,7 @@
 
 module LIS::Transfer
   class ApplicationProtocol < Base
+    attr_reader :device_name
 
     def on_result(&block)
       @on_result_callback = block
@@ -12,6 +13,7 @@ module LIS::Transfer
 
     def received_header(message)
       @patient_information ||= {} # delete the list of patients
+      @device_name = message.sender_name
     end
 
     def result_for(patient, order, result)
@@ -58,7 +60,6 @@ module LIS::Transfer
           @last_order = nil
         when :idle
         when :message
-          p message
           @message = LIS::Message::Base.from_string(message)
           handler = @handlers[@message.class]
           send(handler, @message) if handler
