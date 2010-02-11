@@ -34,11 +34,11 @@ module LIS::Message
 
     def default_fields
       arr = Array.new(@field_count)
-      (0 .. @field_count).inject(arr) do |arr,i|
+      (0 .. @field_count).inject(arr) do |a,i|
         default = (get_field_attributes(i) || {})[:default]
         if default
           default = default.call if default.respond_to?(:call)
-          arr[i-1] = default
+          a[i-1] = default
         end
         arr
       end
@@ -50,7 +50,8 @@ module LIS::Message
                                   :type => opts[:type] || :string,
                                   :default => opts[:default]})
 
-      @field_count = [@field_count || 0, idx].max
+      @field_count ||= 0
+      @field_count = [@field_count, idx].max
 
       return unless name
 
