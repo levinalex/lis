@@ -1,4 +1,5 @@
 require 'net/http'
+require 'yaml'
 
 class WorklistManagerInterface
   def initialize(endpoint)
@@ -16,6 +17,8 @@ class WorklistManagerInterface
       puts e.backtrace
       data = nil
     end
+
+    data
   end
 
   def send_result(patient, order, result)
@@ -30,8 +33,12 @@ class WorklistManagerInterface
     }
 
     p data
-
-    # Net::HTTP.post_form(URI.join(@endpoint, "result/#{URI.encode(barcode)}"), data.to_hash)
+    begin
+      res = Net::HTTP.post_form(URI.join(@endpoint, "result/#{URI.encode(barcode)}"), data.to_hash)
+    rescue Exception => e
+      puts "EXCEPTION"
+      p e
+    end
   end
 
 
