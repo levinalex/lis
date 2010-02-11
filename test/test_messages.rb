@@ -3,10 +3,13 @@ require 'helper'
 class TestMessages < Test::Unit::TestCase
 
   context "header message" do
-    should "have sane defaults" do
-      @message = LIS::Message::Header.new("LIS", "Device")
+    setup do
+      Time.stubs(:now).returns(Time.mktime(2010,2,15,17,28,32))
+    end
 
-      assert_equal "H|\^&||PASSWORD|SenderID|Randolph^New^Jersey^07869||(201)927- 2828|8N1|ReceiverID||P|1|19950522092817", @message.to_message
+    should "have sane defaults" do
+      @message = LIS::Message::Header.new()
+      assert_equal "H|\^&||PASSWORD|SenderID||||8N1|ReceiverID||P|1|20100215172832", @message.to_message
     end
   end
 

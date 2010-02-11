@@ -33,7 +33,10 @@ module LIS::Message
       arr = Array.new(@field_count)
       (0 .. @field_count).inject(arr) do |arr,i|
         default = (get_field_attributes(i) || {})[:default]
-        arr[i-1] = default if default
+        if default
+          default = default.call if default.respond_to?(:call)
+          arr[i-1] = default
+        end
         arr
       end
     end
@@ -48,10 +51,10 @@ module LIS::Message
 
       return unless name
 
-      # define_method :"#{name}=" do |val|
-      #   @fields ||= {}
-      #   @fields[idx] = val
-      # end
+      define_method :"#{name}=" do |val|
+        @fields ||= {}
+        @fields[idx] = val
+      end
 
       define_method :"#{name}" do
         field_attrs = self.class.get_field_attributes(idx)
@@ -134,11 +137,20 @@ module LIS::Message
     type_id "H"
     has_field  2, :delimiter_definition, :default => "^&"
     has_field  4, :access_password, :default => "PASSWORD"
-    has_field  5, :sender_name, :default => "SenderID"
-    has_field 10, :receiver_id, :default => "ReceiverID"
-    has_field 20
+    has_field  5, :sender_name
+    has_field  6, :sender_address
+    has_field  7 # reserved
+    has_field  8 # sender_telephone_number
+    has_field  9, :sender_characteristics, :default => "8N1"
+    has_field 10, :receiver_name
+    has_field 11 # comments/special_instructions
+    has_field 12, :processing_id, :default => "P"
+    has_field 13, :version, :default => "1"
+    has_field 14, :timestamp, :default => lambda { Time.now.strftime("%Y%m%d%H%M%S") }
 
-    def initialize(sender_name, receiver_name)
+    def initialize(sender_name = "SenderID", receiver_name = "ReceiverID")
+      self.sender_name = sender_name
+      self.receiver_name = receiver_name
     end
 
   end
