@@ -16,16 +16,11 @@ module LIS::Message
       obj = klass.allocate
       obj.type_id = type
 
-      # populate named fields
-      data.each_with_index do |val, index|
-        klass.get_named_field_attributes(index + 2)
-        field = klass.get_named_field_attributes(index+2)
-        if field
-          converter = CONVERSION_WRITER[field[:type]]
-          obj.send(:"#{field[:name]}=", converter.call(val))
-        end
+      data = data.to_enum(:each_with_index).inject({}) do |h,(elem,idx)|
+        h[idx+2] = elem; h
       end
 
+      obj.instance_variable_set("@fields", data)
       obj
     end
 
@@ -33,12 +28,22 @@ module LIS::Message
     end
 
     def named_field(idx, name, type = :string)
-      set_named_field_attributes(idx, :name => name, :type => type)
-      attr_accessor name
+      set_index_for(name, idx)
+      set_field_attributes(idx, { :name => name, :type => type })
+
+      define_method :"#{name}=" do |val|
+        @fields ||= {}
+        @fields[idx] = val
+      end
+
+      define_method :"#{name}" do
+        field_attrs = self.class.get_field_attributes(idx)
+        val = (@fields || {})[idx]
+        converter = CONVERSION_WRITER[field_attrs[:type]] if field_attrs
+        val = converter.call(val) if converter
+        val
+      end
     end
-
-
-    protected
 
     def parse(string)
       type, data = string.scan(/^(.)\|(.*)$/)[0]
@@ -52,18 +57,30 @@ module LIS::Message
       @@messages_by_type[char] = self
     end
 
-    def get_named_field_attributes(key)
-      @field_names ||= {}
-      val = (@field_names || {})[key]
-      val ||= superclass.get_named_field_attributes(key) if superclass.respond_to?(:get_named_field_attributes)
+
+    def set_index_for(field_name, idx)
+      @field_indices ||= {}
+      @field_indices[field_name] = idx
+    end
+
+    def get_index_for(field_name)
+      val = @field_index[field_name]
+      val ||= superclass.get_index_for(field_name) if superclass.respond_to?(:get_index_for)
       val
     end
 
-    private
-
-    def set_named_field_attributes(key, hash)
+    def get_field_attributes(index)
       @field_names ||= {}
-      @field_names[key] = hash
+      val = (@field_names || {})[index]
+      val ||= superclass.get_field_attributes(index) if superclass.respond_to?(:get_field_attributes)
+      val
+    end
+
+    #private
+
+    def set_field_attributes(index, hash)
+      @field_names ||= {}
+      @field_names[index] = hash
     end
   end
 
@@ -73,6 +90,20 @@ module LIS::Message
     attr_accessor :type_id
 
     named_field 2, :sequence_number, :int
+
+    def []=(idx, val)
+      attrs = if (idx.is_a?(Symbol))
+                self.class.get_named_field_attributes(idx)
+              else
+                {:name => nil, :type => :string}
+              end
+
+      @field
+    end
+
+    def to_message
+      type_id + @fields.inject([]) { |arr,(k,v)| arr[k-1] = v; arr }.join("|")
+    end
   end
 
 

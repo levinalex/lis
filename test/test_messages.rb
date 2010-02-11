@@ -31,6 +31,10 @@ class TestMessages < Test::Unit::TestCase
     should "have correct speciment id" do
       assert_equal "8780", @message.specimen_id
     end
+
+    should "return message itself on #to_s" do
+      assert_equal @str, @message.to_message
+    end
   end
 
   context "parsing a result message" do
