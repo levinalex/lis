@@ -2,6 +2,14 @@ require 'helper'
 
 class TestMessages < Test::Unit::TestCase
 
+  context "header message" do
+    should "have sane defaults" do
+      @message = LIS::Message::Header.new("LIS", "Device")
+
+      assert_equal "H|\^&||PASSWORD|SenderID|Randolph^New^Jersey^07869||(201)927- 2828|8N1|ReceiverID||P|1|19950522092817", @message.to_message
+    end
+  end
+
   context "message parsing" do
     setup do
       @message = LIS::Message::Base.from_string("L|1|N")
@@ -32,7 +40,7 @@ class TestMessages < Test::Unit::TestCase
       assert_equal "8780", @message.specimen_id
     end
 
-    should "return message itself on #to_s" do
+    should "return message itself on #to_message" do
       assert_equal @str, @message.to_message
     end
   end
@@ -62,6 +70,10 @@ class TestMessages < Test::Unit::TestCase
 
     should "have currect value and unit" do
       assert_equal "mIU/L", @message.unit
+    end
+
+    should "return message itself on #to_message" do
+      assert_equal @str, @message.to_message
     end
   end
 

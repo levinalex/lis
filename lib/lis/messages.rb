@@ -8,6 +8,8 @@ module LIS::Message
       :timestamp => lambda { |s| DateTime.strptime(s, "%Y%m%d%H%M%S") }
     }
 
+    attr_reader :field_count
+
     def from_string(message)
       type, data = parse(message)
       klass = (@@messages_by_type || {})[type]
@@ -27,14 +29,29 @@ module LIS::Message
     def initialize_from_message(*list_of_fields)
     end
 
-    def named_field(idx, name, type = :string)
-      set_index_for(name, idx)
-      set_field_attributes(idx, { :name => name, :type => type })
-
-      define_method :"#{name}=" do |val|
-        @fields ||= {}
-        @fields[idx] = val
+    def default_fields
+      arr = Array.new(@field_count)
+      (0 .. @field_count).inject(arr) do |arr,i|
+        default = (get_field_attributes(i) || {})[:default]
+        arr[i-1] = default if default
+        arr
       end
+    end
+
+    def has_field(idx, name = nil, opts={})
+      set_index_for(name, idx) if name
+      set_field_attributes(idx, { :name => name,
+                                  :type => opts[:type] || :string,
+                                  :default => opts[:default]})
+
+      @field_count = [@field_count || 0, idx].max
+
+      return unless name
+
+      # define_method :"#{name}=" do |val|
+      #   @fields ||= {}
+      #   @fields[idx] = val
+      # end
 
       define_method :"#{name}" do
         field_attrs = self.class.get_field_attributes(idx)
@@ -52,11 +69,11 @@ module LIS::Message
       return [type, data]
     end
 
-    def type_id(char)
+    def type_id(char = nil)
+      return @@messages_by_type.find {|c,klass| klass == self }.first unless char
       @@messages_by_type ||= {}
       @@messages_by_type[char] = self
     end
-
 
     def set_index_for(field_name, idx)
       @field_indices ||= {}
@@ -89,51 +106,62 @@ module LIS::Message
     attr_accessor :frame_number
     attr_accessor :type_id
 
-    named_field 2, :sequence_number, :int
+    has_field 2, :sequence_number, :type => :int
 
-    def []=(idx, val)
-      attrs = if (idx.is_a?(Symbol))
-                self.class.get_named_field_attributes(idx)
-              else
-                {:name => nil, :type => :string}
-              end
+    # def []=(idx, val)
+    #   attrs = if (idx.is_a?(Symbol))
+    #             #self.class.get_named_field_attributes(idx)
+    #           else
+    #             #{:name => nil, :type => :string}
+    #           end
+    #
+    #   @field
+    # end
 
-      @field
+    def type_id
+     self.class.type_id
     end
 
     def to_message
-      type_id + @fields.inject([]) { |arr,(k,v)| arr[k-1] = v; arr }.join("|")
+      @fields ||= {}
+      arr = Array.new(self.class.default_fields)
+      type_id + @fields.inject(arr) { |a,(k,v)| a[k-1] = v; a }.join("|")
     end
   end
 
 
   class Header < Base
     type_id "H"
-    named_field  2, :delimiter_definition
-    named_field  4, :access_password
-    named_field  5, :sender_name
-    named_field 10, :receiver_id
+    has_field  2, :delimiter_definition, :default => "^&"
+    has_field  4, :access_password, :default => "PASSWORD"
+    has_field  5, :sender_name, :default => "SenderID"
+    has_field 10, :receiver_id, :default => "ReceiverID"
+    has_field 20
+
+    def initialize(sender_name, receiver_name)
+    end
+
   end
 
   class Order < Base
     type_id "O"
-    named_field 3, :specimen_id
-    named_field 5, :universal_test_id
-    named_field 6, :priority
-    named_field 7, :requested_at
-    named_field 8, :collected_at
+    has_field 3, :specimen_id
+    has_field 5, :universal_test_id
+    has_field 6, :priority
+    has_field 7, :requested_at
+    has_field 8, :collected_at
   end
 
   class Result < Base
     type_id "R"
-    named_field  3, :universal_test_id_internal
-    named_field  4, :result_value
-    named_field  5, :unit
-    named_field  6, :reference_ranges
-    named_field  7, :abnormal_flags
-    named_field  9, :result_status
-    named_field 12, :test_started_at, :timestamp
-    named_field 13, :test_completed_at, :timestamp
+    has_field  3, :universal_test_id_internal
+    has_field  4, :result_value
+    has_field  5, :unit
+    has_field  6, :reference_ranges
+    has_field  7, :abnormal_flags
+    has_field  9, :result_status
+    has_field 12, :test_started_at, :type => :timestamp
+    has_field 13, :test_completed_at, :type => :timestamp
 
     def universal_test_id
       universal_test_id_internal.gsub(/\^/,"")
@@ -150,7 +178,7 @@ module LIS::Message
 
   class Query < Base
     type_id "Q"
-    named_field 3, :starting_range_id_internal
+    has_field 3, :starting_range_id_internal
 
     def starting_range_id
       starting_range_id_internal.gsub(/\^/,"")
@@ -173,7 +201,7 @@ module LIS::Message
     }
 
     type_id "L"
-    named_field 3, :termination_code
+    has_field 3, :termination_code
   end
 
 end
