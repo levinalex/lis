@@ -2,17 +2,6 @@ require 'helper'
 
 class TestMessages < Test::Unit::TestCase
 
-  context "header message" do
-    setup do
-      Time.stubs(:now).returns(Time.mktime(2010,2,15,17,28,32))
-    end
-
-    should "have sane defaults" do
-      @message = LIS::Message::Header.new()
-      assert_equal "H|\^&||PASSWORD|SenderID||||8N1|ReceiverID||P|1|20100215172832", @message.to_message
-    end
-  end
-
   context "message parsing" do
     setup do
       @message = LIS::Message::Base.from_string("L|1|N")
