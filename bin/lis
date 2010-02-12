@@ -2,9 +2,6 @@
 
 require 'lib/lis.rb'
 
-# protocol = LIS::Transfer::PacketizedProtocol.new
-# server = LIS::Transfer::Server.new(protocol, socket)
-
 socket = File.open("/dev/cu.usbserial-FTC95RQI", "w+")
 server = LIS::Transfer::IOListener.new(socket)
 packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)

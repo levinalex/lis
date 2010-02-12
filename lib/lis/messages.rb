@@ -29,9 +29,6 @@ module LIS::Message
       obj
     end
 
-    def initialize_from_message(*list_of_fields)
-    end
-
     def default_fields
       arr = Array.new(@field_count)
       (0 .. @field_count).inject(arr) do |a,i|
@@ -100,8 +97,6 @@ module LIS::Message
       val
     end
 
-    #private
-
     def set_field_attributes(index, hash)
       @field_names ||= {}
       @field_names[index] = hash
@@ -114,16 +109,6 @@ module LIS::Message
     attr_accessor :type_id
 
     has_field 2, :sequence_number, :type => :int
-
-    # def []=(idx, val)
-    #   attrs = if (idx.is_a?(Symbol))
-    #             #self.class.get_named_field_attributes(idx)
-    #           else
-    #             #{:name => nil, :type => :string}
-    #           end
-    #
-    #   @field
-    # end
 
     def type_id
      self.class.type_id
