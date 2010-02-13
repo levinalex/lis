@@ -1,5 +1,5 @@
 module LIS::Message
-  class TerminatorRecord < Base
+  class Terminator < Base
     TERMINATION_CODES = {
       "N" => "Normal termination",
       "T" => "Sender Aborted",
@@ -11,6 +11,6 @@ module LIS::Message
     }
 
     type_id "L"
-    has_field 3, :termination_code
+    has_field 3, :termination_code, :default => "N"
   end
 end

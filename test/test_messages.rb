@@ -2,21 +2,6 @@ require 'helper'
 
 class TestMessages < Test::Unit::TestCase
 
-  context "message parsing" do
-    setup do
-      @message = LIS::Message::Base.from_string("L|1|N")
-    end
-
-    should "have correct type" do
-      assert_equal LIS::Message::TerminatorRecord, @message.class
-      assert_equal "L", @message.type_id
-    end
-
-    should "have correct sequence number" do
-      assert_equal 1, @message.sequence_number
-    end
-  end
-
   context "parsing an order message" do
     setup do
       @str = "O|1|8780||^^^ATA|R|||||||||||||||||||B0135"
