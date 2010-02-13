@@ -1,24 +1,7 @@
 #!/usr/bin/env ruby1.9 -w
 
 require 'lib/lis.rb'
+require 'lis/commands/application.rb'
 
-socket = File.open("/dev/cu.usbserial-FTC95RQI", "w+")
-server = LIS::Transfer::IOListener.new(socket)
-packet_protocol = LIS::Transfer::PacketizedProtocol.new(server)
-app_protocol = LIS::Transfer::ApplicationProtocol.new(packet_protocol)
-interface = WorklistManagerInterface.new("http://localhost:3000/liaison/")
 
-app_protocol.on_request do |device_name, barcode|
-  res = interface.load_requests(device_name, barcode)
-  p res
-  res
-end
-
-app_protocol.on_result do |*args|
-  p "SEND RESULT"
-  p args
-  interface.send_result(*args)
-  true
-end
-
-server.run!
+LIS::Application.new(ARGV).run!
