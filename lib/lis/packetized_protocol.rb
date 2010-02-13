@@ -17,6 +17,7 @@ module LIS::Transfer
     ENQ = "\005"
     EOT = "\004"
 
+    # format of a message
     RX = /(?:
           \005 | # ENQ - start a transaction
           \004 | # EOT - ends a transaction
@@ -75,12 +76,9 @@ module LIS::Transfer
     def self.message_from_string(string)
       match = string.match(RX)
 
-      frame_number = match[1]
-      data = match[2]
-      checksum = match[3]
+      frame_number, data, checksum = match[1 .. 3]
 
-      expected_checksum = (frame_number + data).each_byte.
-                            inject(16) { |a,b| (a+b) % 0x100 }
+      expected_checksum = (frame_number + data).each_byte.inject(16) { |a,b| (a+b) % 0x100 }
       actual_checksum   = checksum.to_i(16)
 
       raise "checksum mismatch" unless expected_checksum == actual_checksum
@@ -94,6 +92,7 @@ module LIS::Transfer
 
       "\002#{frame_number}#{string}\015\003#{checksum}\015\012"
     end
+
 
     def received_message(message)
       return false unless @inside_transmission
