@@ -14,9 +14,10 @@ module LIS::Message
     has_field 13, :version, :default => "1"
     has_field 14, :timestamp, :default => lambda { Time.now.strftime("%Y%m%d%H%M%S") }
 
-    def initialize(sender_name = "SenderID", receiver_name = "ReceiverID")
+    def initialize(sender_name = "SenderID", receiver_name = "ReceiverID", password = "")
       self.sender_name = sender_name
       self.receiver_name = receiver_name
+      self.access_password = password
     end
   end
 end
