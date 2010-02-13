@@ -28,8 +28,8 @@ module LIS::Transfer
       @on_data = block
     end
 
-    def write(message)
-      @writer << message if @writer
+    def write(*args)
+      @writer.<<(*args) if @writer
     end
     def <<(*args)
       write(*args)
