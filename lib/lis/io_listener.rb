@@ -51,7 +51,6 @@ module LIS::Transfer
       write(*args)
     end
 
-
     # write data to underlying interface. override if data needs to be preprocessed
     #
     def write(*args)

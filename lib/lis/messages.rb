@@ -19,7 +19,6 @@ module LIS::Message
       raise "unknown message type #{type.inspect}" unless klass
 
       obj = klass.allocate
-      obj.type_id = type
 
       data = data.to_enum(:each_with_index).inject({}) do |h,(elem,idx)|
         h[idx+2] = elem; h
@@ -106,7 +105,6 @@ module LIS::Message
   class Base
     extend ClassMethods
     attr_accessor :frame_number
-    attr_accessor :type_id
 
     has_field 2, :sequence_number, :type => :int, :default => 1
 
