@@ -108,7 +108,7 @@ module LIS::Message
     attr_accessor :frame_number
     attr_accessor :type_id
 
-    has_field 2, :sequence_number, :type => :int
+    has_field 2, :sequence_number, :type => :int, :default => 1
 
     def type_id
      self.class.type_id
