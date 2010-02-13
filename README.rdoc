@@ -1,7 +1,0 @@
-= LIS
-
-Description goes here.
-
-== Copyright
-
-Copyright (c) 2010 Levin Alexander. See LICENSE for details.
