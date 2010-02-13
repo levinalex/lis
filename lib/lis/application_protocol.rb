@@ -17,7 +17,7 @@ module LIS::Transfer
     end
 
     def result_for(patient, order, result)
-      @on_result_callback.call(patient, order, result)
+      @on_result_callback.call(@device_name, patient, order, result)
     end
 
     def received_patient_information(message)
@@ -43,18 +43,18 @@ module LIS::Transfer
       return if @patient_information_requests.nil?
 
       write :begin
-      @patient_information_requests.each do |sequence_nr, data|
-        p "sequence: #{sequence_nr.inspect}"
-        p "data: #{data.inspect}"
+      write :message, LIS::Message::Header.new("LIS",@device_name).to_message
 
+      @patient_information_requests.each do |sequence_nr, data|
         write :message, LIS::Message::Patient.new(sequence_nr,
                                                   data["patient"]["number"],
                                                   data["patient"]["last_name"],
-                                                  data["patient"]["first_name"])
+                                                  data["patient"]["first_name"]).to_message
         data["types"].each do |request|
-          write :message, LIS::Message::Order.new(sequence_nr, data["id"], request)
+          write :message, LIS::Message::Order.new(sequence_nr, data["id"], request).to_message
         end
       end
+      write :message, LIS::Message::Terminator.new.to_message
       @patient_information_requests = nil
 
       write :idle

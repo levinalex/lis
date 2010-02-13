@@ -6,9 +6,9 @@ class WorklistManagerInterface
     @endpoint = endpoint
   end
 
-  def load_requests(barcode)
+  def load_requests(device_name, barcode)
     begin
-      uri = URI.join(@endpoint,"find_requests/#{barcode}")
+      uri = URI.join(@endpoint,"find_requests/#{[device_name, barcode].join('-')}")
       result = fetch_with_redirect(uri.to_s)
       data = YAML.load(result.body)
       data["id"] = barcode
@@ -21,7 +21,7 @@ class WorklistManagerInterface
     data
   end
 
-  def send_result(patient, order, result)
+  def send_result(device_name, patient, order, result)
     barcode = order.specimen_id
     data = {
       "test_name" => order.universal_test_id,
@@ -34,7 +34,7 @@ class WorklistManagerInterface
 
     p data
     begin
-      res = Net::HTTP.post_form(URI.join(@endpoint, "result/#{URI.encode(barcode)}"), data.to_hash)
+      res = Net::HTTP.post_form(URI.join(@endpoint, "result/#{[device_name, barcode].join('-')}"), data.to_hash)
     rescue Exception => e
       puts "EXCEPTION"
       p e
