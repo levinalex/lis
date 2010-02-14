@@ -51,12 +51,13 @@ module LIS::Transfer
           end
         end
       end
-      @patient_information_requests = nil
+      @patient_information_requests = {}
     end
 
     def initialize(*args)
       super
 
+      @patient_information_requests = {}
       @last_patient = nil
       @last_order = nil
       @handlers = {
@@ -69,6 +70,7 @@ module LIS::Transfer
     end
 
     def receive(type, message = nil)
+      warn "[R] #{message}" if type == :message and $VERBOSE
       case type
         when :begin
           @last_patient = nil
@@ -82,12 +84,18 @@ module LIS::Transfer
       end
     end
 
-    def sending_session(data = &block)
+    def write(type, message=nil)
+      warn "[S] #{message}" if type == :message and $VERBOSE
+      super
+    end
+
+    # @yield data
+    def sending_session(data)
       # don't send anything if there are no pending requests
-      return if @patient_information_requests.nil?
+      return if data.nil? or data.empty?
 
       write :begin
-      write :message, LIS::Message::Header.new("LIS",@device_name).to_message
+      write :message, LIS::Message::Header.new("LIS", @device_name).to_message
       yield data
       write :message, LIS::Message::Terminator.new.to_message
       write :idle

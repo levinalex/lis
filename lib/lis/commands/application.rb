@@ -7,18 +7,22 @@ module LIS
     def initialize(args)
       super()
 
-      default_options = { :port => "/dev/null", :uri => "http://localhost:3000/lis" }
+      default_options = { :port => "/dev/null", :uri => "http://localhost:3000/lis/" }
       self.merge!(default_options)
 
       @opts = OptionParser.new do |o|
         appname = File.basename($0)
         o.banner = "Usage: #{appname} [options]"
 
-        o.on('--listen PORT', 'which port to listen on (default: "/dev/ttyUSB0")') do |port|
+        o.on('-l, --listen PORT', 'which port to listen on (default: "/dev/ttyUSB0")') do |port|
           self[:port] = port
         end
-        o.on('--endpoint URI', 'HTTP endpoint (default: "http://localhost:3000/lis")') do |endpoint|
+        o.on('-e, --endpoint URI', 'HTTP endpoint (default: "http://localhost:3000/lis/")') do |endpoint|
           self[:uri] = endpoint
+        end
+        o.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+          $VERBOSE = v
+          self[:verbose] = v
         end
       end
 
@@ -43,21 +47,8 @@ module LIS
 
     def run!
       warn "listening on: #{@options[:port]}"
-
-      server  = LIS::Transfer::IOListener.new(File.open(@options[:port], "w+"))
-      packets = LIS::Transfer::PacketizedProtocol.new(server)
-
-      app_protocol = LIS::Transfer::ApplicationProtocol.new(packets)
-      interface    = WorklistManagerInterface.new("http://localhost:3000/liaison/")
-
-      app_protocol.on_request do |device_name, barcode|
-        interface.load_requests(device_name, barcode)
-      end
-      app_protocol.on_result do |*args|
-        interface.send_result(*args)
-      end
-
-      server.run!
+      port = File.open(@options[:port], "w+")
+      LIS::InterfaceServer.new(port, @options[:uri]).run!
     end
   end
 

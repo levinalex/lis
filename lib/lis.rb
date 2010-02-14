@@ -11,3 +11,4 @@ Dir[File.join(File.dirname(__FILE__), 'lis/messages/**/*.rb')].each { |f| requir
 require 'lis/packetized_protocol.rb'
 require 'lis/application_protocol.rb'
 require 'lis/worklist_manager_interface.rb'
+require 'lis/interface_server.rb'
