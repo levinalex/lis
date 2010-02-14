@@ -8,12 +8,12 @@ class TestHeaderMessages < Test::Unit::TestCase
 
     should "have sane defaults" do
       @message = LIS::Message::Header.new()
-      assert_equal "H|\^&|||SenderID||||8N1|ReceiverID||P|1|20100215172832", @message.to_message
+      assert_equal "H|\\^&|||SenderID||||8N1|ReceiverID||P|1|20100215172832", @message.to_message
     end
 
     should "have overridable sender and receiver IDs" do
       @message = LIS::Message::Header.new("SEND", "RECV", "PASSWORD")
-      assert_equal "H|\^&||PASSWORD|SEND||||8N1|RECV||P|1|20100215172832", @message.to_message
+      assert_equal "H|\\^&||PASSWORD|SEND||||8N1|RECV||P|1|20100215172832", @message.to_message
     end
   end
 end

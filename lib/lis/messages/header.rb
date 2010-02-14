@@ -1,7 +1,7 @@
 module LIS::Message
   class Header < Base
     type_id "H"
-    has_field  2, :delimiter_definition, :default => "^&"
+    has_field  2, :delimiter_definition, :default => "\\^&"
     has_field  4, :access_password
     has_field  5, :sender_name
     has_field  6, :sender_address
