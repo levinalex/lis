@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "README.markdown",
      "Rakefile",
      "VERSION",
+     "bin/lis2http",
      "features/communication basics.feature",
      "features/lis.feature",
      "features/step_definitions/lis_steps.rb",
