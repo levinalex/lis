@@ -40,24 +40,18 @@ module LIS::Transfer
     end
 
     def send_pending_requests
-      return if @patient_information_requests.nil?
-
-      write :begin
-      write :message, LIS::Message::Header.new("LIS",@device_name).to_message
-
-      @patient_information_requests.each do |sequence_nr, data|
-        write :message, LIS::Message::Patient.new(sequence_nr,
-                                                  data["patient"]["number"],
-                                                  data["patient"]["last_name"],
-                                                  data["patient"]["first_name"]).to_message
-        data["types"].each do |request|
-          write :message, LIS::Message::Order.new(sequence_nr, data["id"], request).to_message
+      sending_session(@patient_information_requests) do |patient_information|
+        patient_information.each do |sequence_nr, data|
+          write :message, LIS::Message::Patient.new(sequence_nr,
+                                                    data["patient"]["number"],
+                                                    data["patient"]["last_name"],
+                                                    data["patient"]["first_name"]).to_message
+          data["types"].each do |request|
+            write :message, LIS::Message::Order.new(sequence_nr, data["id"], request).to_message
+          end
         end
       end
-      write :message, LIS::Message::Terminator.new.to_message
       @patient_information_requests = nil
-
-      write :idle
     end
 
     def initialize(*args)
@@ -86,6 +80,17 @@ module LIS::Transfer
           handler = @handlers[@message.class]
           send(handler, @message) if handler
       end
+    end
+
+    def sending_session(data = &block)
+      # don't send anything if there are no pending requests
+      return if @patient_information_requests.nil?
+
+      write :begin
+      write :message, LIS::Message::Header.new("LIS",@device_name).to_message
+      yield data
+      write :message, LIS::Message::Terminator.new.to_message
+      write :idle
     end
   end
 end
