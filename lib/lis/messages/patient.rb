@@ -15,6 +15,7 @@ module LIS::Message
     def initialize(sequence_number, patient_id, last_name = "", first_name = "")
       self.sequence_number = sequence_number
       self.practice_assigned_patient_id = patient_id
+      self.patient_id = patient_id
       self.name = [last_name, first_name].join("^")
     end
 
