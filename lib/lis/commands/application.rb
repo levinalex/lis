@@ -43,13 +43,19 @@ module LIS
 
     def run!
       warn "listening on: #{@options[:port]}"
-      warn ""
 
       server  = LIS::Transfer::IOListener.new(File.open(@options[:port], "w+"))
       packets = LIS::Transfer::PacketizedProtocol.new(server)
 
       app_protocol = LIS::Transfer::ApplicationProtocol.new(packets)
       interface    = WorklistManagerInterface.new("http://localhost:3000/liaison/")
+
+      app_protocol.on_request do |device_name, barcode|
+        interface.load_requests(device_name, barcode)
+      end
+      app_protocol.on_result do |*args|
+        interface.send_result(*args)
+      end
 
       server.run!
     end
