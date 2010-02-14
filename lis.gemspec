@@ -5,40 +5,53 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lis}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Levin Alexander"]
-  s.date = %q{2010-02-07}
-  s.default_executable = %q{lis}
+  s.date = %q{2010-02-14}
+  s.default_executable = %q{lis2http}
   s.description = %q{}
   s.email = %q{mail@levinalex.net}
-  s.executables = ["lis"]
+  s.executables = ["lis2http"]
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+     "README.markdown"
   ]
   s.files = [
     ".document",
      ".gitignore",
+     ".yardopts",
      "LICENSE",
-     "README.rdoc",
+     "README.markdown",
      "Rakefile",
      "VERSION",
-     "bin/lis",
      "features/communication basics.feature",
      "features/lis.feature",
      "features/step_definitions/lis_steps.rb",
      "features/support/env.rb",
      "lib/lis.rb",
      "lib/lis/application_protocol.rb",
+     "lib/lis/commands/application.rb",
+     "lib/lis/interface_server.rb",
      "lib/lis/io_listener.rb",
      "lib/lis/messages.rb",
+     "lib/lis/messages/header.rb",
+     "lib/lis/messages/order.rb",
+     "lib/lis/messages/patient.rb",
+     "lib/lis/messages/query.rb",
+     "lib/lis/messages/result.rb",
+     "lib/lis/messages/terminator.rb",
      "lib/lis/packetized_protocol.rb",
      "lib/lis/worklist_manager_interface.rb",
      "lis.gemspec",
      "test/helper.rb",
      "test/lib/mock_server.rb",
+     "test/messages/test_header.rb",
+     "test/messages/test_order.rb",
+     "test/messages/test_patients.rb",
+     "test/messages/test_terminator.rb",
+     "test/test_application_protocol.rb",
      "test/test_io_listener.rb",
      "test/test_messages.rb",
      "test/test_packetized_protocol.rb"
@@ -51,6 +64,11 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/helper.rb",
      "test/lib/mock_server.rb",
+     "test/messages/test_header.rb",
+     "test/messages/test_order.rb",
+     "test/messages/test_patients.rb",
+     "test/messages/test_terminator.rb",
+     "test/test_application_protocol.rb",
      "test/test_io_listener.rb",
      "test/test_messages.rb",
      "test/test_packetized_protocol.rb"

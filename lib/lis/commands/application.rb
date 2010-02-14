@@ -7,7 +7,7 @@ module LIS
     def initialize(args)
       super()
 
-      default_options = { :port => "/dev/null", :uri => "http://localhost:3000/lis/" }
+      default_options = { :port => "/dev/ttyUSB0", :uri => "http://localhost/lis/" }
       self.merge!(default_options)
 
       @opts = OptionParser.new do |o|
@@ -17,7 +17,7 @@ module LIS
         o.on('-l, --listen PORT', 'which port to listen on (default: "/dev/ttyUSB0")') do |port|
           self[:port] = port
         end
-        o.on('-e, --endpoint URI', 'HTTP endpoint (default: "http://localhost:3000/lis/")') do |endpoint|
+        o.on('-e, --endpoint URI', 'HTTP endpoint (default: "http://localhost/lis/")') do |endpoint|
           self[:uri] = endpoint
         end
         o.on("-v", "--[no-]verbose", "Run verbosely") do |v|
