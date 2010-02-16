@@ -22,6 +22,17 @@ class TestMessages < Test::Unit::TestCase
     end
   end
 
+  context "parsing a comment message" do
+    setup do
+      @str = "C|1|BAD_QC|"
+      @message = LIS::Message::Base.from_string(@str)
+    end
+
+    should "create a comment message" do
+      assert_equal LIS::Message::Comment, @message.class
+    end
+  end
+
   context "parsing a result message" do
     setup do
       @str = "R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135"
