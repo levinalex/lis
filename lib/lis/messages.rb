@@ -5,7 +5,7 @@ module LIS::Message
     CONVERSION_WRITER = {
       :string => lambda { |s| s },
       :int => lambda { |s| s.to_i },
-      :timestamp => lambda { |s| DateTime.strptime(s, "%Y%m%d%H%M%S") }
+      :timestamp => lambda { |s| DateTime.strptime(s, "%Y%m%d%H%M%S") rescue nil }
     }
 
     def field_count(val = nil)

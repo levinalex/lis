@@ -63,6 +63,11 @@ class TestMessages < Test::Unit::TestCase
     should "return message itself on #to_message" do
       assert_equal @str, @message.to_message
     end
+
+    should "parse empty result messages without error" do
+      @message = LIS::Message::Base.from_string("R|1|^^^||||||X|||||LIAISON")
+      assert_equal LIS::Message::Result, @message.class
+    end
   end
 
 end
