@@ -43,11 +43,14 @@ module LIS
         warn @options.opts
         exit 1
       end
+      @port = @options[:port]
     end
 
     def run!
-      warn "listening on: #{@options[:port]}"
-      port = File.open(@options[:port], "w+")
+      warn "configuring #{@port}"
+      `stty -echo raw ospeed 9600 ispeed 9600 < #{@port}`
+      port = File.open(@port, "w+")
+      warn "listening"
       LIS::InterfaceServer.new(port, @options[:uri]).run!
     end
   end

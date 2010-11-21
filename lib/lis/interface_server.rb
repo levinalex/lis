@@ -11,7 +11,7 @@ module LIS
         interface.load_requests(device_name, barcode)
       end
       app_protocol.on_result do |*args|
-        interface.send_result(*args)
+        interface.send_result(*args) rescue nil
       end
     end
 

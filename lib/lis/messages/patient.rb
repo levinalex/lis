@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module LIS::Message
   class Patient < Base
     type_id "P"
@@ -16,7 +17,7 @@ module LIS::Message
       self.sequence_number = sequence_number
       self.practice_assigned_patient_id = patient_id
       self.patient_id = patient_id
-      self.name = [last_name, first_name].join("^")
+      self.name = [last_name, first_name].map { |s| s.force_encoding("UTF-8") }.join("^")
     end
 
   end
