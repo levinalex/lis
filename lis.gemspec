@@ -13,85 +13,20 @@ Gem::Specification.new do |s|
   s.default_executable = %q{lis2http}
   s.description = %q{}
   s.email = %q{mail@levinalex.net}
-  s.executables = ["lis2http"]
-  s.extra_rdoc_files = [
-    "LICENSE",
-     "README.markdown"
-  ]
-  s.files = [
-    ".document",
-     ".gitignore",
-     ".yardopts",
-     "LICENSE",
-     "README.markdown",
-     "Rakefile",
-     "VERSION",
-     "bin/lis2http",
-     "features/communication basics.feature",
-     "features/lis.feature",
-     "features/step_definitions/lis_steps.rb",
-     "features/support/env.rb",
-     "lib/lis.rb",
-     "lib/lis/application_protocol.rb",
-     "lib/lis/commands/application.rb",
-     "lib/lis/interface_server.rb",
-     "lib/lis/io_listener.rb",
-     "lib/lis/messages.rb",
-     "lib/lis/messages/header.rb",
-     "lib/lis/messages/order.rb",
-     "lib/lis/messages/patient.rb",
-     "lib/lis/messages/query.rb",
-     "lib/lis/messages/result.rb",
-     "lib/lis/messages/terminator.rb",
-     "lib/lis/packetized_protocol.rb",
-     "lib/lis/worklist_manager_interface.rb",
-     "lis.gemspec",
-     "test/helper.rb",
-     "test/lib/mock_server.rb",
-     "test/messages/test_header.rb",
-     "test/messages/test_order.rb",
-     "test/messages/test_patients.rb",
-     "test/messages/test_terminator.rb",
-     "test/test_application_protocol.rb",
-     "test/test_io_listener.rb",
-     "test/test_messages.rb",
-     "test/test_packetized_protocol.rb"
-  ]
+
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+
   s.homepage = %q{http://github.com/levinalex/lis}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{LIS interface to Siemens Immulite 2000XPi or other similar analyzers}
-  s.test_files = [
-    "test/helper.rb",
-     "test/lib/mock_server.rb",
-     "test/messages/test_header.rb",
-     "test/messages/test_order.rb",
-     "test/messages/test_patients.rb",
-     "test/messages/test_terminator.rb",
-     "test/test_application_protocol.rb",
-     "test/test_io_listener.rb",
-     "test/test_messages.rb",
-     "test/test_packetized_protocol.rb"
-  ]
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-      s.add_development_dependency(%q<yard>, [">= 0"])
-      s.add_development_dependency(%q<cucumber>, [">= 0"])
-    else
-      s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-      s.add_dependency(%q<yard>, [">= 0"])
-      s.add_dependency(%q<cucumber>, [">= 0"])
-    end
-  else
-    s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-    s.add_dependency(%q<yard>, [">= 0"])
-    s.add_dependency(%q<cucumber>, [">= 0"])
-  end
+  s.add_development_dependency("shoulda", [">= 0"])
+  s.add_development_dependency("mocha", [">= 0"])
+  s.add_development_dependency(%q<yard>, [">= 0"])
+  s.add_development_dependency(%q<cucumber>, [">= 0"])
 end
 
