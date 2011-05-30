@@ -1,6 +1,6 @@
-#!/usr/bin/env ruby1.9
+#!/usr/bin/env ruby
 
-require 'lib/lis.rb'
+require 'lis'
 require 'lis/commands/application.rb'
 
 LIS::Application.new(ARGV).run!
