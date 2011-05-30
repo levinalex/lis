@@ -47,6 +47,7 @@ module LIS::Transfer
     end
 
     # @see #write
+    #
     def <<(*args)
       write(*args)
     end
