@@ -1,9 +1,9 @@
 Given /^LIS Interface listening for messages$/ do
   @client, @r, @w = PacketIO::Test::MockServer.build
   @io = PacketIO::IOListener.new(@r, @w)
-  @server = LIS::InterfaceServer.create(@io, "http://localhost/lis")
+  @server = LIS::InterfaceServer.create(@io, "http://localhost/lis/")
 
-  stub_request(:post, /http:\/\/localhost\/result\/DPC-.*/).
+  stub_request(:post, /http:\/\/localhost\/lis\/result\/.*/).
     with(:body => /.*/, :headers => {'Accept'=>'*/*', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Ruby'}).
     to_return(:status => 200, :body => "", :headers => {})
 
@@ -32,7 +32,7 @@ Then /^should have posted results:$/ do |table|
   # table is a Cucumber::Ast::Table
   table.hashes.each do |row|
     expected_body = ["test_name", "value", "unit", "status", "flags", "result_timestamp"].inject({}) { |h,k| h[k] = row[k]; h }
-    assert_requested(:post, "http://localhost/result/#{row["id"]}", :times => 1, :body => expected_body)
+    assert_requested(:post, "http://localhost/lis/result/#{row["id"]}", :times => 1, :body => expected_body)
   end
 
 end
