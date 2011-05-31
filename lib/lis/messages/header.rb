@@ -1,4 +1,30 @@
 module LIS::Message
+
+  # = Header Message
+  #
+  # First message sent in any transaction, contains system information such as sender ID, receiver ID, address, etc.
+  #
+  # == Message Examples
+  #
+  #  1H|\^&||PASSWORD|DPC CIRRUS||Flanders^New^Jersey^07836||973-927-2828|N81|Your System||P|1|19940407120613
+  #
+  # == Message Structure
+  #
+  # 1. Record Type (H)
+  # 2. Delimiter Def.
+  # 3. Message Control ID
+  # 4. Password
+  # 5. Sending systems company name
+  # 6. Sending Systems address
+  # 7. Reserved
+  # 8. Senders Phone#
+  # 9. Communication parameters
+  # 10. Receiver ID
+  # 11. Comments/special instructions
+  # 12. Processing ID
+  # 13. Version#
+  # 14. Message Date + Time
+  #
   class Header < Base
     type_id "H"
     has_field  2, :delimiter_definition, :default => "\\^&"
@@ -21,3 +47,4 @@ module LIS::Message
     end
   end
 end
+

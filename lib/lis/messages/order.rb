@@ -1,4 +1,54 @@
 module LIS::Message
+
+  # = Order Message
+  #
+  # Defines which test, such as TSH or HCG, should be performed on the sample for a particular accession number.
+  #
+  # == Message Examples
+  #
+  #  3O|1|1550623||^^^LH|R|19931011091233|19931011091233
+  #
+  #  6O|1|130000724||^^^E2|||19950118122000
+  #
+  #  6O|1|66412558||^^^HCG|||200011081530||||||Normal|||||||||||E0872
+  #
+  #  1O|1|09861081||^^^TSH|R|||||||||||||||||||E0872
+  #
+  # == Message Structure
+  #
+  # 1. Record Type (O)
+  # 2. Sequence#
+  # 3. Specimen ID (Accession#)
+  # 4. Instrument Specimen ID
+  # 5. Universal Test ID
+  # 6. Priority
+  # 7. Order Date/Time
+  # 8. Collection Date/Time
+  # 9. Collection End Time
+  # 10. Collection Volume
+  # 11. Collector ID
+  # 12. Action Code
+  # 13. Danger Code
+  # 14. Relevant Clinical Info
+  # 15. Date/Time Specimen Received
+  # 16. Specimen Descriptor,Specimen Type,Specimen Source
+  # 17. Ordering Physician
+  # 18. Physician's Telephone Number
+  # 19. User Field No.1
+  # 20. User Field No.2
+  # 21. Lab Field No.1
+  # 22. Lab Field No.2
+  # 23. Date/Time results reported or last modified
+  # 24. Instrument Charge to Computer System
+  # 25. Instrument Section ID
+  # 26. Report Types
+  # 27. Reserved Field
+  # 28. Location or ward of Specimen Collection
+  # 29. Nosocomial Infection Flag
+  # 30. Specimen Service
+  # 31. Specimen Institution
+  #
+
   class Order < Base
     type_id "O"
 
@@ -33,3 +83,4 @@ module LIS::Message
     end
   end
 end
+
