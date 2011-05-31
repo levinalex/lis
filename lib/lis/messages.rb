@@ -1,6 +1,9 @@
 require 'date'
 
 module LIS::Message
+
+  # declarative definition of message structure
+  #
   module ClassMethods
     CONVERSION_WRITER = {
       :string => lambda { |s| s },
@@ -11,21 +14,6 @@ module LIS::Message
     def field_count(val = nil)
       @field_count = val if val
       @field_count
-    end
-
-    def from_string(message)
-      type, data = parse(message)
-      klass = (@@messages_by_type || {})[type]
-      raise "unknown message type #{type.inspect}" unless klass
-
-      obj = klass.allocate
-
-      data = data.to_enum(:each_with_index).inject({}) do |h,(elem,idx)|
-        h[idx+2] = elem; h
-      end
-
-      obj.instance_variable_set("@fields", data)
-      obj
     end
 
     def default_fields
@@ -40,6 +28,8 @@ module LIS::Message
       end
     end
 
+    # define a field of a message at a specific index and an optional type
+    #
     def has_field(idx, name = nil, opts={})
       set_index_for(name, idx) if name
       set_field_attributes(idx, { :name => name,
@@ -65,13 +55,8 @@ module LIS::Message
       end
     end
 
-    def parse(string)
-      type, data = string.scan(/^(.)\|(.*)$/)[0]
-      data = data.split(/\|/)
-
-      return [type, data]
-    end
-
+    # registers a message with a specific type prefix to make {Message::Base.from_string} work
+    #
     def type_id(char = nil)
       return @@messages_by_type.find {|c,klass| klass == self }.first unless char
       @@messages_by_type ||= {}
@@ -100,11 +85,25 @@ module LIS::Message
       @field_names ||= {}
       @field_names[index] = hash
     end
+
+    private
+
+    def class_for_type(type)
+      klass = (@@messages_by_type || {})[type]
+      raise "unknown message type #{type.inspect}" unless klass
+      return klass
+    end
+
+    def parse(string)
+      type, data = string.scan(/^(.)\|(.*)$/)[0]
+      data = data.split(/\|/)
+
+      return [type, data]
+    end
   end
 
   class Base
     extend ClassMethods
-    attr_accessor :frame_number
 
     has_field 2, :sequence_number, :type => :int, :default => 1
 
@@ -112,11 +111,36 @@ module LIS::Message
      self.class.type_id
     end
 
+    # serialize a Message object into a String
+    #
+    #   message = Message.from_string("5L|1|N") #=> <LIS::Message>
+    #   message.to_message #=> "5L|1|N"
+    #
     def to_message
       @fields ||= {}
       arr = Array.new(self.class.default_fields)
       type_id + @fields.inject(arr) { |a,(k,v)| a[k-1] = v; a }.join("|")
     end
-  end
 
+    # instantiate a new Message from a string
+    #
+    #   Message.from_string("5L|1|N") #=> <LIS::Message::Terminator>
+    #
+    # register subclasses by using {ClassMethods#type_id type_id}
+    #
+    def self.from_string(message)
+      type, data = parse(message)
+      klass = class_for_type(type)
+
+      obj = klass.allocate
+
+      data = data.to_enum(:each_with_index).inject({}) do |h,(elem,idx)|
+        h[idx+2] = elem; h
+      end
+
+      obj.instance_variable_set("@fields", data)
+      obj
+    end
+  end
 end
+
