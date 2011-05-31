@@ -83,7 +83,7 @@ module LIS::Transfer
       expected_checksum = (frame_number + data).each_byte.inject(16) { |a,b| (a+b) % 0x100 }
       actual_checksum   = checksum.to_i(16)
 
-      raise "checksum mismatch" unless expected_checksum == actual_checksum
+      raise "checksum mismatch: expected %03x got %03x" % [expected_checksum, actual_checksum] unless expected_checksum == actual_checksum
       return [frame_number.to_i, data]
     end
 
