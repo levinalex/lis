@@ -39,8 +39,8 @@ end
 
 Then /^the server should have acknowledged (\d+) packets$/ do |packet_count|
   @data = @client.read_all
-  assert_equal 39, @data.split(//).length
-  assert @data.match(/\006{38}/), "should contain #{packet_count} ACKs, was #{@data.inspect}"
+  assert_equal packet_count.to_i, @data.split(//).length
+  assert @data.match(/^\006{#{packet_count}}$/), "should contain #{packet_count.to_i} ACKs, was #{@data.inspect}"
 end
 
 

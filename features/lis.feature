@@ -32,27 +32,20 @@ Feature:
       2P|6|556357;MB|||Last 6^First 6|||M|||||
       3O|1|130000790||^^^IGE|||19950118120000
       4R|1|^^^IGE|517.|IU/mL|.01\.01^600\600|N|N|F||test|19950119085018|19950119093202|SenderID
-      5P|7|141053;TGH|||Last 7^First 7|||F|||||
-      6O|1|130000805||^^^FER|||19950118120000
-      7R|1|^^^FER|21.0|ng/mL|.5\.5^1500\1500|N|N|F||test|19950119085049|19950119093233|SenderID
-      1P|8|320439;TGH|||Last 8^First 8|||F|||||
-      2O|1|130000890||^^^FER|||19950118130000
-      3R|1|^^^FER|12.9|ng/mL|.5\.5^1500\1500|N|N|F||test|19950119085254|19950119093609|SenderID
-      4P|9||||Last 9^First 9||||||||
-      5O|1|130000911||^^^E2
-      6R|1|^^^E2|71.3|pg/mL|12\12^2000\2000|N|N|F||test|19950119085423|19950119100800|SenderID
-      7P|10|358069;TGH|||Last 10^First 10|||F|||||
-      1O|1|130000929||^^^FER|||19950118123000
-      2R|1|^^^FER|219.|ng/mL|.5\.5^1500\1500|N|N|F||test|19950119085628|19950119093843|SenderID
-      3L|1
+      5L|1
     """
-    Then the server should have acknowledged 39 packets
-    Then should have posted results:
+    Then the server should have acknowledged 27 packets
+    And should have posted results:
       | id            | test_name   | value  | unit   | status | flags | result_timestamp          |
       | DPC-130000445 | TT4         | 10.3   | ug/dL  | F      | N     | 1995-01-19T09:28:26+00:00 |
       | DPC-130000445 | TU          | 26.6   | Percnt | F      | N     | 1995-01-19T09:27:56+00:00 |
       | DPC-130000617 | FER         | 173.   | ng/mL  | F      | N     | 1995-01-19T09:28:58+00:00 |
       | DPC-130000722 | FER         | 490.   | ng/mL  | F      | N     | 1995-01-19T09:29:28+00:00 |
       | DPC-130000724 | E2          | 25.3   | pg/mL  | F      | N     | 1995-01-19T10:00:49+00:00 |
+      | DPC-130000724 | FSH         | 60.6   | mIU/mL | F      | N     | 1995-01-19T09:30:30+00:00 |
+      | DPC-130000724 | LH          | 24.4   | mIU/mL | F      | N     | 1995-01-19T09:31:01+00:00 |
+      | DPC-130000741 | FER         | 238.   | ng/mL  | F      | N     | 1995-01-19T09:31:32+00:00 |
+      | DPC-130000790 | IGE         | 517.   | IU/mL  | F      | N     | 1995-01-19T09:32:02+00:00 |
+
 
 
