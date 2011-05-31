@@ -22,9 +22,12 @@ module LIS::Message
   # 4. Laboratory Assigned Patient ID
   # 5. Patient ID
   # 6. Patient Name
+  #      (Last^First^Initial; maximum of 20 characters for Last Name; maximum of 15 characters for First Name)
   # 7. Mother's Maiden Name
   # 8. BirthDate
+  #      (YYYYMMDD; maximum of 8 characters)
   # 9. Patient Sex
+  #      (M or F; maximum of 1 character)
   # 10. Patient Race
   # 11. Patient Address
   # 12. Reserved
