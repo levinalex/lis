@@ -20,11 +20,12 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.summary = %q{LIS interface to Siemens Immulite 2000XPi or other similar analyzers}
 
-  s.add_dependency "packet_io", "~> 0.4.0.rc2"
+  s.add_dependency "packet_io", "~> 0.4.0.rc4"
 
   s.add_development_dependency("shoulda", ["~> 2.11.3"])
   s.add_development_dependency("mocha", ["~> 0.9.12"])
   s.add_development_dependency("yard", ["~> 0.7.1"])
   s.add_development_dependency("cucumber", ["~> 0.10.3"])
+  s.add_development_dependency("webmock")
 end
 
