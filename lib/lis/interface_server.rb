@@ -1,16 +1,25 @@
 module LIS
   class InterfaceServer
-    def initialize(port, http_endpoint)
-      @server  = PacketIO::IOListener.new(port)
-      @packets = LIS::Transfer::ASTM::E1394.new(@server)
+    def self.listen(port, http_endpoint)
+      interface = PacketIO::IOListener.new(port)
+      new(interface, http_endpoint)
+    end
 
-      app_protocol = LIS::Transfer::ApplicationProtocol.new(@packets)
-      interface    = WorklistManagerInterface.new(http_endpoint)
+    def self.create(*args)
+      new(*args)
+    end
 
-      app_protocol.on_request do |device_name, barcode|
+
+    def initialize(server, http_endpoint, protocol_stack = [LIS::Transfer::ASTM::E1394, LIS::Transfer::ApplicationProtocol])
+      @server = server
+      protocol = protocol_stack.inject(server) { |i,klass| klass.new(i) }
+      interface = WorklistManagerInterface.new(http_endpoint)
+
+
+      protocol.on_request do |device_name, barcode|
         interface.load_requests(device_name, barcode)
       end
-      app_protocol.on_result do |*args|
+      protocol.on_result do |*args|
         interface.send_result(*args)
       end
     end
@@ -19,5 +28,11 @@ module LIS
       warn "listener started" if $VERBOSE
       @server.run!
     end
+
+
+    class << self
+      private :new
+    end
   end
 end
+

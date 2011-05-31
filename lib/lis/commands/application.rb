@@ -48,7 +48,7 @@ module LIS
     def run!
       warn "listening on: #{@options[:port]}"
       port = File.open(@options[:port], "w+")
-      LIS::InterfaceServer.new(port, @options[:uri]).run!
+      LIS::InterfaceServer.listen(port, @options[:uri]).run!
     end
   end
 
