@@ -32,7 +32,7 @@ class WorklistManagerInterface
       "result_timestamp" => result.test_completed_at
     }
 
-    p data
+    # FIXME: WTF: should not just catch everything
     begin
       res = Net::HTTP.post_form(URI.join(@endpoint, "result/#{[device_name, barcode].join('-')}"), data.to_hash)
     rescue Exception => e
