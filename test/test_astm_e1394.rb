@@ -17,7 +17,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     str = self.class.gsub_nonprintable(str)
     expected = self.class.gsub_nonprintable(expected)
 
-    match = LIS::Transfer::PacketizedProtocol::RX.match(str)
+    match = LIS::Transfer::ASTM::E1394::RX.match(str)
     assert_not_nil match, expected
     assert_equal expected, match[0]
   end
@@ -39,7 +39,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     setup do
       @sent = []
       @data = []
-      @protocol = LIS::Transfer::PacketizedProtocol.new(nil, @sent)
+      @protocol = LIS::Transfer::ASTM::E1394.new(nil, @sent)
       @protocol.on_data do |*d|
         @data << d
       end

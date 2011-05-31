@@ -1,8 +1,8 @@
 module LIS
   class InterfaceServer
     def initialize(port, http_endpoint)
-      @server  = LIS::Transfer::IOListener.new(port)
-      @packets = LIS::Transfer::PacketizedProtocol.new(@server)
+      @server  = PacketIO::IOListener.new(port)
+      @packets = LIS::Transfer::ASTM::E1394.new(@server)
 
       app_protocol = LIS::Transfer::ApplicationProtocol.new(@packets)
       interface    = WorklistManagerInterface.new(http_endpoint)
