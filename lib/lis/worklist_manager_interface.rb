@@ -6,6 +6,15 @@ class WorklistManagerInterface
     @endpoint = endpoint
   end
 
+  # expects all pending requests for the given device and barcode
+  #
+  #   { "id" => "1234",
+  #     "patient" => { "number" => 98,
+  #                    "last_name" => "Sierra",
+  #                    "first_name" => "Rudolph" },
+  #     "types" => [ "TSH", "FT3", "FT4" ] }
+  #
+  #
   def load_requests(device_name, barcode)
     begin
       uri = URI.join(@endpoint,"find_requests/#{[device_name, barcode].join('-')}")

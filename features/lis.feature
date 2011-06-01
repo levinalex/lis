@@ -3,6 +3,30 @@ Feature:
   As a doctor
   I want to be able to receive test results via LIS
 
+  Scenario: LIS asking for pending requests
+    Given LIS Interface listening for messages
+    And the following requests are pending for DPC:
+      | id     | patient_id | last_name | first_name | test_names                   |
+      | 123ABC | 98         | Sierra    | Rudolph    | TSH, FT3, FT4, FOO, BAR, BAZ |
+    When receiving data
+    """
+      1H|\^&||PASSWORD|DPC||Randolph^New^Jersey^07869||(201)927-2828|N81|Your System||P|1|19940407120613 51
+      2Q|1|^123ABC||ALL||||||||O 76
+      3L|1
+    """
+    Then LIS should have sent test orders to client:
+    """
+      1H|\^&|||LIS||||8N1|DPC||P|1|
+      2P|1||||Sierra^Rudolph||||||||
+      3O|1|123ABC||^^^TSH
+      4O|1|123ABC||^^^FT3
+      5O|1|123ABC||^^^FT4
+      6O|1|123ABC||^^^FOO
+      7O|1|123ABC||^^^BAR
+      0O|1|123ABC||^^^BAZ
+      1L|1|N
+    """
+
   Scenario: sending results from Immulite to LIS
     Given LIS Interface listening for messages
     When receiving data
