@@ -10,7 +10,7 @@ Given /^LIS Interface listening for messages$/ do
   @server = LIS::InterfaceServer.create(@io, "http://localhost/lis/")
 
   stub_request(:post, /http:\/\/localhost\/lis\/result\/.*/).
-    with(:body => /.*/, :headers => {'Accept'=>'*/*', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Ruby'}).
+    with(:body => /.*/, :headers => {'Accept'=>'*/*', 'Content-Type'=>'application/x-www-form-urlencoded'}).
     to_return(:status => 200, :body => "", :headers => {})
 
   @t = Thread.new do
@@ -58,7 +58,7 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
              "types" => patient["test_names"].strip.split(/\s+/) }
 
     stub_request(:get, "http://localhost/lis/find_requests/#{device_name}-#{patient["id"]}").
-      with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+      with(:headers => {'Accept'=>'*/*'}).
       to_return(:status => 200, :body => body.to_yaml, :headers => {})
 
   end
@@ -70,10 +70,12 @@ Then /^LIS should have sent test orders to client:$/ do |text|
   @data = @client.read_all
   @data.force_encoding("utf-8") if @data.respond_to?(:force_encoding)
   @packets = @data.split("\002").select { |s| s =~ /^\d[A-Z]/ }
-  @packets.zip(text.lines) do |actual, expected|
+  @packets.zip(text.split(/\n/)) do |actual, expected|
+    @called = true
     rx =  Regexp.new("^" + Regexp.escape(expected.strip))
     assert_match(rx, actual.gsub(/\r\003.*$/, "").strip)
   end
+  assert_equal(true, @called)
 end
 
 
