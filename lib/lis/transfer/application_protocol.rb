@@ -1,3 +1,4 @@
+# encoding: UTF-8
 
 module LIS::Transfer
   class ApplicationProtocol < ::PacketIO::Base
