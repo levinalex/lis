@@ -51,14 +51,11 @@ end
 #
 Given /^the following requests are pending for (\w+):$/ do |device_name, table|
   table.hashes.each do |patient|
-    p patient
-
     body = { "patient" => { "last_name" => patient["last_name"],
                             "first_name" => patient["first_name"],
                             "id" => patient["patient_id"]},
              "id" => patient["id"],
              "types" => patient["test_names"].strip.split(/\s+/) }
-    p body
 
     stub_request(:get, "http://localhost/lis/find_requests/#{device_name}-#{patient["id"]}").
       with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
@@ -71,6 +68,7 @@ end
 
 Then /^LIS should have sent test orders to client:$/ do |text|
   @data = @client.read_all
+  @data.force_encoding("utf-8") if @data.respond_to?(:force_encoding)
   @packets = @data.split("\002").select { |s| s =~ /^\d[A-Z]/ }
   @packets.zip(text.lines) do |actual, expected|
     rx =  Regexp.new("^" + Regexp.escape(expected.strip))
