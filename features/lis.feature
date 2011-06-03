@@ -7,7 +7,7 @@ Feature:
     Given LIS Interface listening for messages
     And the following requests are pending for DPC:
       | id     | patient_id | last_name | first_name | test_names                   |
-      | 123ABC | 98         | Sierra    | Rudolph    | TSH, FT3, FT4, FOO, BAR, BAZ |
+      | 123ABC | 98         | Müller    | Rudolph    | TSH, FT3, FT4, FOO, BAR, BAZ |
     When receiving data
     """
       1H|\^&||PASSWORD|DPC||Randolph^New^Jersey^07869||(201)927-2828|N81|Your System||P|1|19940407120613 51
@@ -17,7 +17,7 @@ Feature:
     Then LIS should have sent test orders to client:
     """
       1H|\^&|||LIS||||8N1|DPC||P|1|
-      2P|1||||Sierra^Rudolph||||||||
+      2P|1||||Müller^Rudolph||||||||
       3O|1|123ABC||^^^TSH
       4O|1|123ABC||^^^FT3
       5O|1|123ABC||^^^FT4

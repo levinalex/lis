@@ -74,7 +74,7 @@ module LIS::Message
       self.sequence_number = sequence_number
       self.practice_assigned_patient_id = patient_id
       self.patient_id = patient_id
-      self.name = [last_name.force_encoding("UTF-8"), first_name.force_encoding("UTF-8")].join("^")
+      self.name = [last_name, first_name].join("^")
     end
 
   end
