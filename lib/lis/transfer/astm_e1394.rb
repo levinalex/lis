@@ -36,14 +36,14 @@ module LIS::Transfer
 
     def initialize(*args)
       super(*args)
-      @memo = ""
+      @data = StringScanner.new("")
       @inside_transmission = false
     end
 
     def receive(data)
-      scanner = StringScanner.new(@memo + data)
-      while scanner.scan_until(RX)
-        match = scanner.matched
+      @data.concat(data)
+      while @data.scan_until(RX)
+        match = @data.matched
         case match
           when ENQ then transmission_start
           when EOT then transmission_end
@@ -53,7 +53,6 @@ module LIS::Transfer
           write :ack
         end
       end
-      @memo = scanner.rest
       nil
     end
 
