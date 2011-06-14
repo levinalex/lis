@@ -7,9 +7,7 @@ require 'lis'
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+  test.libs << 'test'
 end
 
 require 'cucumber/rake/task'
