@@ -23,10 +23,10 @@ Gem::Specification.new do |s|
   s.add_dependency "packet_io", "~> 0.4.0"
   s.add_dependency "rake"
 
-  s.add_development_dependency("shoulda", "~> 2.11.3")
-  s.add_development_dependency("mocha", "~> 0.9.12")
-  s.add_development_dependency("yard", "~> 0.7.1")
-  s.add_development_dependency("cucumber", "~> 0.10.3")
-  s.add_development_dependency("webmock", "~> 1.6.4")
+  s.add_development_dependency("shoulda", "~> 3.0.0")
+  s.add_development_dependency("mocha", "~> 0.12.0")
+  s.add_development_dependency("yard")
+  s.add_development_dependency("cucumber", "~> 1.2.0")
+  s.add_development_dependency("webmock", "~> 1.8.7")
 end
 
