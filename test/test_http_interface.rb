@@ -10,7 +10,6 @@ class TestHTTPInterface < Test::Unit::TestCase
 
   context "posting a result" do
     setup do
-      @patient = LIS::Message::Patient.new(12 ,89 ,"Sierra", "Rudolph")
       @order = LIS::Message::Order.new(13, 12345, "TSTID")
       @result = LIS::Message::Result.from_string("R|1|^^^LH|8.2|mIU/mL|.7\.7^400\400|N|N|F||test|19931011091233|19931011091233|DPCCIRRUS")
     end
@@ -25,7 +24,7 @@ class TestHTTPInterface < Test::Unit::TestCase
                         "value"=>"8.2"}).
         to_return(:status => 200, :body => "", :headers => {})
 
-      @interface.send_result(@device_name, @patient, @order, @result)
+      @interface.send_result(@device_name, @order, @result)
       assert_requested(result_stub)
     end
   end

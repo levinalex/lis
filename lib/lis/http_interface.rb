@@ -32,7 +32,7 @@ class LIS::HTTPInterface
     data
   end
 
-  def send_result(device_name, patient, order, result)
+  def send_result(device_name, order, result)
     barcode = order.specimen_id
     data = {
       "test_name" => order.universal_test_id,

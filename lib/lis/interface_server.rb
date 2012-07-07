@@ -19,8 +19,8 @@ module LIS
       protocol.on_request do |device_name, barcode|
         interface.load_requests(device_name, barcode)
       end
-      protocol.on_result do |*args|
-        interface.send_result(*args)
+      protocol.on_result do |device_name, patient, order, result|
+        interface.send_result(device_name, order, result)
       end
     end
 
