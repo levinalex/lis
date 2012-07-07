@@ -67,3 +67,4 @@ class WorklistManagerInterface
     end
   end
 end
+
