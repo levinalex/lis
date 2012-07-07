@@ -1,9 +1,9 @@
 require 'helper'
 
-class TestWorklistManagerInterface < Test::Unit::TestCase
+class TestHTTPInterface < Test::Unit::TestCase
 
   def setup
-    @interface = WorklistManagerInterface.new("http://localhost/lis/")
+    @interface = LIS::HTTPInterface.new("http://localhost/lis/")
     @device_name = "LIS1"
   end
 

@@ -3,7 +3,7 @@
 require 'net/http'
 require 'yaml'
 
-class WorklistManagerInterface
+class LIS::HTTPInterface
   def initialize(endpoint)
     @endpoint = endpoint
   end

@@ -13,7 +13,7 @@ module LIS
     def initialize(server, http_endpoint, protocol_stack = [LIS::Transfer::ASTM::E1394, LIS::Transfer::ApplicationProtocol])
       @server = server
       protocol = protocol_stack.inject(server) { |i,klass| klass.new(i) }
-      interface = WorklistManagerInterface.new(http_endpoint)
+      interface = HTTPInterface.new(http_endpoint)
 
 
       protocol.on_request do |device_name, barcode|
