@@ -8,7 +8,7 @@ module LIS::Transfer
   # splits a stream into lis packets and only lets packets through
   # that are inside a session delimited by ENQ .. EOT
   #
-  # check the checksum and do acknowledgement of messages
+  # checks the checksum and does acknowledgement of messages
   #
   # forwards the following events:
   #
