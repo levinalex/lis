@@ -13,7 +13,51 @@ available][spec])
 [spec]: http://www.google.com/search?q=dpc+lis+immulite+2000+filetype:pdf
 
 
+## Usage
+
+* run the LIS server:
+
+    ```
+    $ gem install lis
+    $ lis2http --help
+    $ lis2http -l /dev/ttyUSB0 -e http://worklist.example/lis
+    ```
+* now, whenever order requests arrive from the LIS hardware, lis2http will forward them to the specified HTTP endpoint:
+
+    ```
+    GET http://worklist.example/lis/find_requests/{DEVICE_NAME}-{SPECIMEN_ID}
+    ```
+
+* this should return basic patient information as well as test IDs for all pending requests:
+
+    ```
+    ---
+    id: '1234'
+    patient:
+      id: 98
+      last_name: Sierra
+      first_name: Rudolph
+    types:
+    - TSTID
+    - TSH
+    - FT3
+    - FT4
+    ```
+
+* results are posted to the same URI as soon as they are received:
+
+    ```
+    POST http://worklist.example/lis/find_requests/{DEVICE_NAME}-{SPECIMEN_ID}
+
+    ---
+    flags: N
+    result_timestamp: '1993-10-11T09:12:33+00:00'
+    status: F
+    test_name: TSTID
+    unit: mIU/mL
+    value: '8.2'
+    ```
 
 ## Copyright
 
-Copyright (c) 2010-2011 Levin Alexander. See LICENSE for details.
+Copyright (c) 2010-2012 Levin Alexander. See LICENSE for details.
