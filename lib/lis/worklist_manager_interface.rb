@@ -11,7 +11,7 @@ class WorklistManagerInterface
   # expects all pending requests for the given device and barcode
   #
   #   { "id" => "1234",
-  #     "patient" => { "number" => 98,
+  #     "patient" => { "id" => 98,
   #                    "last_name" => "Sierra",
   #                    "first_name" => "Rudolph" },
   #     "types" => [ "TSH", "FT3", "FT4" ] }

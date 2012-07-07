@@ -17,7 +17,7 @@ Feature:
     Then LIS should have sent test orders to client:
     """
       1H|\^&|||LIS||||8N1|DPC||P|1|
-      2P|1||||Müller^Rudolph||||||||
+      2P|1|98||98|Müller^Rudolph||||||||
       3O|1|123ABC||^^^TSH
       4O|1|123ABC||^^^FT3
       5O|1|123ABC||^^^FT4

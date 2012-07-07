@@ -44,7 +44,7 @@ module LIS::Transfer
       sending_session(@patient_information_requests) do |patient_information|
         patient_information.each do |sequence_nr, data|
           write :message, LIS::Message::Patient.new(sequence_nr,
-                                                    data["patient"]["number"],
+                                                    data["patient"]["id"],
                                                     data["patient"]["last_name"],
                                                     data["patient"]["first_name"]).to_message
           data["types"].each do |request|
