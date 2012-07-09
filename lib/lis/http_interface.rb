@@ -29,8 +29,13 @@ class LIS::HTTPInterface
     data
   end
 
+
+  def set_request_status(device_name, data)
+  end
+
   def send_result(device_name, order, result)
     barcode = order.specimen_id
+
     data = {
       "test_name" => order.universal_test_id,
       "value" => result.result_value,

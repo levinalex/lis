@@ -15,12 +15,14 @@ module LIS
       protocol = protocol_stack.inject(server) { |i,klass| klass.new(i) }
       interface = HTTPInterface.new(http_endpoint)
 
-
       protocol.on_request do |device_name, barcode|
         interface.load_requests(device_name, barcode)
       end
       protocol.on_result do |device_name, patient, order, result|
         interface.send_result(device_name, order, result)
+      end
+      protocol.on_request_sent do |device_name, data|
+        interface.set_request_status(device_name, data)
       end
     end
 

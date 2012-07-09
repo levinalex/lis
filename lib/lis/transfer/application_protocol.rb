@@ -12,6 +12,10 @@ module LIS::Transfer
       @on_request_callback = block
     end
 
+    def on_request_sent(&block)
+      @on_request_sent_callback = block
+    end
+
     def received_header(message)
       @patient_information_requests ||= {} # delete the list of patients
       @device_name = message.sender_name
@@ -50,6 +54,8 @@ module LIS::Transfer
           request_data.each_type do |id, request|
             write :message, LIS::Message::Order.new(sequence_nr, id, request).to_message
           end
+
+          @on_request_sent_callback.call(@device_name, request_data) if @on_request_sent_callback
         end
       end
       @patient_information_requests = {}
