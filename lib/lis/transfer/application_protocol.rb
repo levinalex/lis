@@ -42,13 +42,13 @@ module LIS::Transfer
 
     def send_pending_requests
       sending_session(@patient_information_requests) do |patient_information|
-        patient_information.each do |sequence_nr, data|
+        patient_information.each do |sequence_nr, request_data|
           write :message, LIS::Message::Patient.new(sequence_nr,
-                                                    data["patient"]["id"],
-                                                    data["patient"]["last_name"],
-                                                    data["patient"]["first_name"]).to_message
-          data["types"].each do |request|
-            write :message, LIS::Message::Order.new(sequence_nr, data["id"], request).to_message
+                                                    request_data.patient_id,
+                                                    request_data.patient_last_name,
+                                                    request_data.patient_first_name).to_message
+          request_data.each_type do |id, request|
+            write :message, LIS::Message::Order.new(sequence_nr, id, request).to_message
           end
         end
       end

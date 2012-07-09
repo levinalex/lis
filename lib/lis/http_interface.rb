@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'net/http'
-require 'yaml'
 
 class LIS::HTTPInterface
   def initialize(endpoint)
@@ -16,13 +15,11 @@ class LIS::HTTPInterface
   #                    "first_name" => "Rudolph" },
   #     "types" => [ "TSH", "FT3", "FT4" ] }
   #
-  #
   def load_requests(device_name, barcode)
     begin
       uri = URI.join(@endpoint,"find_requests/#{[device_name, barcode].join('-')}")
       result = fetch_with_redirect(uri.to_s)
-      data = YAML.load(result.body)
-      data["id"] = barcode
+      data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
       puts e.backtrace

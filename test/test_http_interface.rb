@@ -52,7 +52,7 @@ class TestHTTPInterface < Test::Unit::TestCase
                                   "first_name" => "Rudolph" },
                    "types" => [ "TSH", "FT3", "FT4" ] }
 
-      assert_equal expected, data
+      assert_equal expected, data.to_hash
     end
   end
 end
