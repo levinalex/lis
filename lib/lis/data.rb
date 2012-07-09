@@ -14,10 +14,14 @@ module LIS
       def patient_first_name
         @data["patient"]["first_name"]
       end
+      def id
+        @data["id"]
+      end
+
 
       def each_type
         @data["types"].each do |t|
-          yield @data["id"], t
+          yield id, t
         end
       end
 
