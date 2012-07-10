@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.summary = %q{LIS interface to Siemens Immulite 2000XPi or other similar analyzers}
 
   s.add_dependency "packet_io", "~> 0.4.0"
+  s.add_dependency "rest-client"
   s.add_dependency "rake"
 
   s.add_development_dependency("shoulda", "~> 3.0.0")

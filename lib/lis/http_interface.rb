@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require 'net/http'
+require 'rest-client'
 
 class LIS::HTTPInterface
   def initialize(endpoint)
@@ -18,7 +18,7 @@ class LIS::HTTPInterface
   def load_requests(device_name, barcode)
     begin
       uri = URI.join(@endpoint,"find_requests/#{[device_name, barcode].join('-')}")
-      result = fetch_with_redirect(uri.to_s)
+      result = RestClient.get(uri.to_s)
       data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
@@ -47,26 +47,12 @@ class LIS::HTTPInterface
 
     # FIXME: WTF: should not just catch everything
     begin
-      res = Net::HTTP.post_form(URI.join(@endpoint, "result/#{[device_name, barcode].join('-')}"), data.to_hash)
+      res = RestClient.post(URI.join(@endpoint, "result/#{[device_name, barcode].join('-')}").to_s, data.to_hash)
     rescue Exception => e
       puts "EXCEPTION"
       p e
     end
   end
 
-
-  private
-
-  def fetch_with_redirect(uri_str, limit = 10)
-    raise ArgumentError, 'too many HTTP redirects' if limit == 0
-
-    response = Net::HTTP.get_response(URI.parse(uri_str))
-    case response
-      when Net::HTTPSuccess     then response
-      when Net::HTTPRedirection then fetch_with_redirect(response['location'], limit - 1)
-    else
-      response.error!
-    end
-  end
 end
 

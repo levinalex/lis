@@ -10,7 +10,6 @@ Given /^LIS Interface listening for messages$/ do
   @server = LIS::InterfaceServer.create(@io, "http://localhost/lis/")
 
   stub_request(:post, /http:\/\/localhost\/lis\/result\/.*/).
-    with(:body => /.*/, :headers => {'Accept'=>'*/*', 'Content-Type'=>'application/x-www-form-urlencoded'}).
     to_return(:status => 200, :body => "", :headers => {})
 
   @t = Thread.new do
@@ -58,7 +57,6 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
              "types" => patient["test_names"].strip.split(/\s+/) }
 
     stub_request(:get, "http://localhost/lis/find_requests/#{device_name}-#{patient["id"]}").
-      with(:headers => {'Accept'=>'*/*'}).
       to_return(:status => 200, :body => body.to_yaml, :headers => {})
 
   end
