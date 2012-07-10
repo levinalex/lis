@@ -8,7 +8,6 @@ module LIS
                    desc: "stores configuration and authentication data",
                    arg_name: "FILE"
 
-
     flag ["listen", "l"], arg_name: "PORT", desc: "which port to listen on", default_value: "/dev/ttyUSB0"
     flag ["endpoint", "e"], arg_name: "URI", desc: "HTTP endpoint", default_value: "http://localhost/api/lis"
     switch ["verbose", "v"], desc: "Increase verbosity"
@@ -25,6 +24,19 @@ module LIS
         port = File.open(global_options[:listen], "w+")
         LIS::InterfaceServer.listen(port, global_options[:endpoint]).run!
       end
+    end
+
+    desc "load a list of test requests"
+    arg_name "DEVICE_NAME REQUEST_ID"
+    command "requests" do |c|
+      c.action do |global_options,options,args|
+        help_now!("need to provida a device name") if args.size < 2
+
+        req = LIS::HTTPInterface.new(global_options[:endpoint]).load_requests(*args)
+        puts req.types
+      end
+
+
     end
 
 
