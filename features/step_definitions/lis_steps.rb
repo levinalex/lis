@@ -7,9 +7,9 @@ require 'yaml'
 Given /^LIS Interface listening for messages$/ do
   @client, @r, @w = PacketIO::Test::MockServer.build
   @io = PacketIO::IOListener.new(@r, @w)
-  @server = LIS::InterfaceServer.create(@io, "http://localhost/lis/")
+  @server = LIS::InterfaceServer.create(@io, "http://localhost/lis")
 
-  stub_request(:post, /http:\/\/localhost\/lis\/result\/.*/).
+  stub_request(:post, /http:\/\/localhost\/lis\/.*/).
     to_return(:status => 200, :body => "", :headers => {})
 
   @t = Thread.new do
@@ -35,7 +35,7 @@ end
 Then /^should have posted results:$/ do |table|
   table.hashes.each do |row|
     expected_body = ["test_name", "value", "unit", "status", "flags", "result_timestamp"].inject({}) { |h,k| h[k] = row[k]; h }
-    assert_requested(:post, "http://localhost/lis/result/#{row["id"]}", :times => 1, :body => expected_body)
+    assert_requested(:post, "http://localhost/lis/#{row["id"]}/result/#{row["test_name"]}", :times => 1, :body => expected_body)
   end
 end
 
@@ -56,7 +56,7 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
              "id" => patient["id"],
              "types" => patient["test_names"].strip.split(/\s+/) }
 
-    stub_request(:get, "http://localhost/lis/find_requests/#{device_name}-#{patient["id"]}").
+    stub_request(:get, "http://localhost/lis/#{device_name}-#{patient["id"]}/requests").
       to_return(:status => 200, :body => body.to_yaml, :headers => {})
 
   end

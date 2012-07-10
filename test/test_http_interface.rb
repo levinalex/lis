@@ -3,7 +3,7 @@ require 'helper'
 class TestHTTPInterface < Test::Unit::TestCase
 
   def setup
-    @interface = LIS::HTTPInterface.new("http://localhost/lis/")
+    @interface = LIS::HTTPInterface.new("http://localhost/lis")
     @device_name = "LIS1"
   end
 
@@ -15,7 +15,7 @@ class TestHTTPInterface < Test::Unit::TestCase
     end
 
     should "should post correct format to the HTTP endpoint" do
-      result_stub = stub_request(:post, "http://localhost/lis/result/LIS1-12345").
+      result_stub = stub_request(:post, "http://localhost/lis/LIS1-12345/result/TSTID").
         with(:body => { "flags"=>"N",
                         "result_timestamp"=>"1993-10-11T09:12:33+00:00",
                         "status"=>"F",
@@ -40,9 +40,9 @@ class TestHTTPInterface < Test::Unit::TestCase
 
 
     should "return patient information and requests" do
-      stub_request( :get, "http://localhost/lis/find_requests/LIS1-SOMETHING").to_return(:status => 301, :headers => { 'Location' => "http://localhost/lis/find_requests/LIS1-1234" } )
+      stub_request( :get, "http://localhost/lis/LIS1-SOMETHING/requests").to_return(:status => 301, :headers => { 'Location' => "http://localhost/lis/LIS1-1234/requests" } )
 
-      result_stub = stub_request(:get, "http://localhost/lis/find_requests/LIS1-1234")
+      result_stub = stub_request(:get, "http://localhost/lis/LIS1-1234/requests")
       result_stub.to_return( :status => 200, :body => @http_result, :headers => {})
       data = @interface.load_requests(@device_name, "SOMETHING")
 

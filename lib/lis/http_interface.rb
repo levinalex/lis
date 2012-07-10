@@ -17,8 +17,7 @@ class LIS::HTTPInterface
   #
   def load_requests(device_name, barcode)
     begin
-      uri = URI.join(@endpoint,"find_requests/#{[device_name, barcode].join('-')}")
-      result = RestClient.get(uri.to_s)
+      result = RestClient.get(uri(device_name, barcode, "requests"))
       data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
@@ -31,6 +30,8 @@ class LIS::HTTPInterface
 
 
   def set_request_status(device_name, data)
+    # uri = URI.join(@endpoint, "result_status/#{[device_name, data.id].join('-')}")
+    # Net::HTTP.post_form(uri, data.to_hash)
   end
 
   def send_result(device_name, order, result)
@@ -47,11 +48,20 @@ class LIS::HTTPInterface
 
     # FIXME: WTF: should not just catch everything
     begin
-      res = RestClient.post(URI.join(@endpoint, "result/#{[device_name, barcode].join('-')}").to_s, data.to_hash)
+      res = RestClient.post(uri(device_name, barcode, "result", order.universal_test_id), data)
     rescue Exception => e
       puts "EXCEPTION"
       p e
     end
+  end
+
+
+  private
+
+  def uri(device_name, barcode, action, test_name = nil)
+    id = [device_name, barcode].join("-")
+
+    [@endpoint, id, action, test_name].compact.join("/")
   end
 
 end
