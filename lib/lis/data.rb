@@ -18,6 +18,10 @@ module LIS
         @data["id"]
       end
 
+      def types
+        @data["types"]
+      end
+
 
       def each_type
         @data["types"].each do |t|

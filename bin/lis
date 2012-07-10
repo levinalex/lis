@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require 'gli'
+
+require 'lis'
+require 'lis/cli'
+
+exit LIS::CLI.run(ARGV.dup)
+

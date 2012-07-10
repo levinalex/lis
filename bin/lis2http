@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'lis'
-require 'lis/commands/application.rb'
-
-LIS::Application.new(ARGV).run!
