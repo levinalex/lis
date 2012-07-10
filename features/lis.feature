@@ -1,8 +1,4 @@
 Feature:
-  In order to diagnose patients correctly
-  As a doctor
-  I want to be able to receive test results via LIS
-
   Scenario: LIS asking for pending requests
     Given LIS Interface listening for messages
     And the following requests are pending for DPC:

@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
-require 'mocha'
-require 'yaml'
+
 
 
 Given /^LIS Interface listening for messages$/ do
@@ -58,9 +57,7 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
 
     stub_request(:get, "http://localhost/lis/#{device_name}-#{patient["id"]}/requests").
       to_return(:status => 200, :body => body.to_yaml, :headers => {})
-
   end
-
 end
 
 
