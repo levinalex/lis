@@ -10,9 +10,10 @@ module LIS
     end
 
 
-    def initialize(server, http_endpoint, protocol_stack = [LIS::Transfer::ASTM::E1394, LIS::Transfer::ApplicationProtocol])
+    def initialize(server, http_endpoint)
       @server = server
-      protocol = protocol_stack.inject(server) { |i,klass| klass.new(i) }
+
+      protocol = LIS::Transfer::ApplicationProtocol.new(LIS::Transfer::Logging.new(LIS::Transfer::ASTM::E1394.new(server)))
       interface = HTTPInterface.new(http_endpoint)
 
       protocol.on_request do |device_name, barcode|

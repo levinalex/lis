@@ -77,7 +77,6 @@ module LIS::Transfer
     end
 
     def receive(type, message = nil)
-      warn "[R] #{message}" if type == :message and $VERBOSE
       case type
         when :begin
           @last_patient = nil
