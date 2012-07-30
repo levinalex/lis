@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rake"
   s.add_dependency "gli", "~> 2.0.0.rc5"
 
-  s.add_development_dependency("shoulda", "~> 3.0.0")
+  s.add_development_dependency("shoulda", "~> 3.1.0")
   s.add_development_dependency("mocha", "~> 0.12.0")
   s.add_development_dependency("yard")
   s.add_development_dependency("cucumber", "~> 1.2.0")
