@@ -8,7 +8,7 @@ Given /^LIS Interface listening for messages$/ do
   @io = PacketIO::IOListener.new(@r, @w)
   @server = LIS::InterfaceServer.create(@io, "http://localhost/lis")
 
-  stub_request(:post, /http:\/\/localhost\/lis\/.*/).
+  stub_request(:post, /http:\/\/localhost\/lis\/.*?\/result\/.*/).
     to_return(:status => 200, :body => "", :headers => {})
 
   @t = Thread.new do
