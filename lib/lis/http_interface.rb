@@ -43,7 +43,8 @@ class LIS::HTTPInterface
       "unit" => result.unit,
       "status" => result.result_status,
       "flags" => result.abnormal_flags,
-      "result_timestamp" => result.test_completed_at
+      "result_timestamp" => result.test_completed_at,
+      "raw" => result.raw_data
     }
 
     # FIXME: WTF: should not just catch everything

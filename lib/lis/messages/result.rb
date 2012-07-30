@@ -38,6 +38,10 @@ module LIS::Message
     has_field 12, :test_started_at, :type => :timestamp
     has_field 13, :test_completed_at, :type => :timestamp
 
+    def raw_data
+      to_message
+    end
+
     def universal_test_id
       universal_test_id_internal.gsub(/\^/,"")
     end

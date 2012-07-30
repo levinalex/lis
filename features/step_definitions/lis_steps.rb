@@ -34,7 +34,7 @@ end
 Then /^should have posted results:$/ do |table|
   table.hashes.each do |row|
     expected_body = ["test_name", "value", "unit", "status", "flags", "result_timestamp"].inject({}) { |h,k| h[k] = row[k]; h }
-    assert_requested(:post, "http://localhost/lis/#{row["id"]}/result/#{row["test_name"]}", :times => 1, :body => expected_body)
+    assert_requested(:post, "http://localhost/lis/#{row["id"]}/result/#{row["test_name"]}", :times => 1, :body => hash_including(expected_body))
   end
 end
 

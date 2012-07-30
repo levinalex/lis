@@ -11,7 +11,8 @@ class TestHTTPInterface < Test::Unit::TestCase
   context "posting a result" do
     setup do
       @order = LIS::Message::Order.new(13, 12345, "TSTID")
-      @result = LIS::Message::Result.from_string("R|1|^^^LH|8.2|mIU/mL|.7\.7^400\400|N|N|F||test|19931011091233|19931011091233|DPCCIRRUS")
+      @string = "R|1|^^^LH|8.2|mIU/mL|.7\.7^400\400|N|N|F||test|19931011091233|19931011091233|DPCCIRRUS"
+      @result = LIS::Message::Result.from_string(@string)
     end
 
     should "should post correct format to the HTTP endpoint" do
@@ -21,7 +22,8 @@ class TestHTTPInterface < Test::Unit::TestCase
                         "status"=>"F",
                         "test_name"=>"TSTID",
                         "unit"=>"mIU/mL",
-                        "value"=>"8.2"}).
+                        "value"=>"8.2",
+                        "raw"=>@string}).
         to_return(:status => 200, :body => "", :headers => {})
 
       @interface.send_result(@device_name, @order, @result)
