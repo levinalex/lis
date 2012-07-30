@@ -81,7 +81,7 @@ module LIS::Transfer
 
       frame_number, data, checksum = match[1 .. 3]
 
-      expected_checksum = (frame_number + data).each_byte.inject(16) { |a,b| (a+b) % 0x100 }
+      expected_checksum = compute_checksum(frame_number + data)
       actual_checksum   = checksum.to_i(16)
 
       raise "checksum mismatch: expected %03x got %03x" % [expected_checksum, actual_checksum] unless expected_checksum == actual_checksum
@@ -90,10 +90,14 @@ module LIS::Transfer
 
     def self.wrap_message(string, frame_number)
       frame_number = (frame_number % 8).to_s
-      checksum = (frame_number + string).each_byte.inject(16) { |a,b| (a+b) % 0x100 }
+      checksum = compute_checksum(frame_number + string)
       checksum = checksum.to_s(16).upcase.rjust(2,"0")
 
       "\002#{frame_number}#{string}\015\003#{checksum}\015\012"
+    end
+
+    def self.compute_checksum(str)
+      str.each_byte.inject(16) { |a,b| (a+b) % 0x100 }
     end
 
 
