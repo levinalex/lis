@@ -30,7 +30,6 @@ module LIS
     arg_name "DEVICE_NAME REQUEST_ID"
     command "requests" do |c|
       c.action do |global_options,options,args|
-        help_now!("need to provida a device name") if args.size < 2
 
         req = LIS::HTTPInterface.new(global_options[:endpoint]).load_requests(*args)
         puts req.types
