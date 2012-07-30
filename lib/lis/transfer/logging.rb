@@ -7,13 +7,20 @@ module LIS::Transfer
     end
 
     def receive(type, message=nil)
-      warn ["<", type.to_s, message].join(" ") if @verbose
+      output("<", type, message)
       super
     end
 
     def write(type, message=nil)
-      warn [">", type.to_s, message].join(" ") if @verbose
+      output(">", type, message)
       super
+    end
+
+
+    private
+
+    def output(direction, type, message)
+      warn [direction, type.to_s, message].join(" ") if @verbose
     end
   end
 end
