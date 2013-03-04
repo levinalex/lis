@@ -19,9 +19,10 @@ available][spec])
 
     ```
     $ gem install lis
-    $ lis2http --help
-    $ lis2http -l /dev/ttyUSB0 -e http://worklist.example/lis
+    $ lis help
+    $ lis -l /dev/ttyUSB0 -e http://worklist.example/lis server
     ```
+
 * now, whenever order requests arrive from the LIS hardware, lis2http will forward them to the specified HTTP endpoint:
 
     ```
