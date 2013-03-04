@@ -20,8 +20,12 @@ module LIS
     desc "run the LIS server"
     command "server" do |c|
       c.action do |global_options,options,args|
-        warn "listening on: #{global_options[:listen]}"
-        port = File.open(global_options[:listen], "w+")
+        port = global_options[:listen]
+        warn "configuring #{port}"
+        `stty -echo raw ospeed 9600 ispeed 9600 < #{port}`
+        warn "listening on: #{port}"
+        port = File.open(port, "w+")
+
         LIS::InterfaceServer.listen(port, global_options[:endpoint]).run!
       end
     end
