@@ -25,7 +25,7 @@ available][spec])
 * now, whenever order requests arrive from the LIS hardware, lis2http will forward them to the specified HTTP endpoint:
 
     ```
-    GET http://worklist.example/lis/find_requests/{DEVICE_NAME}-{SPECIMEN_ID}
+    GET http://worklist.example/lis/{DEVICE_NAME}-{SPECIMEN_ID}
     ```
 
 * this should return basic patient information as well as test IDs for all pending requests:
@@ -47,7 +47,7 @@ available][spec])
 * results are posted to the same URI as soon as they are received:
 
     ```
-    POST http://worklist.example/lis/find_requests/{DEVICE_NAME}-{SPECIMEN_ID}
+    POST http://worklist.example/lis/{DEVICE_NAME}-{SPECIMEN_ID}/{TEST_NAME}
 
     ---
     flags: N
@@ -60,4 +60,4 @@ available][spec])
 
 ## Copyright
 
-Copyright (c) 2010-2012 Levin Alexander. See LICENSE for details.
+Copyright (c) 2010-2013 Levin Alexander. See LICENSE for details.
