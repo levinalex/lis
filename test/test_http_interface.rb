@@ -16,7 +16,7 @@ class TestHTTPInterface < Test::Unit::TestCase
     end
 
     should "should post correct format to the HTTP endpoint" do
-      result_stub = stub_request(:post, "http://localhost/lis/LIS1-12345/result/TSTID").
+      result_stub = stub_request(:post, "http://localhost/lis/LIS1-12345/TSTID").
         with(:body => { "flags"=>"N",
                         "result_timestamp"=>"1993-10-11T09:12:33+00:00",
                         "status"=>"F",

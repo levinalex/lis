@@ -49,7 +49,7 @@ class LIS::HTTPInterface
 
     # FIXME: WTF: should not just catch everything
     begin
-      res = RestClient.post(uri(device_name, barcode, "result", order.universal_test_id), data)
+      res = RestClient.post(uri(device_name, barcode, order.universal_test_id), data)
     rescue Exception => e
       puts "EXCEPTION"
       p e
