@@ -17,6 +17,7 @@ module LIS
       interface = HTTPInterface.new(http_endpoint)
 
       protocol.on_request do |device_name, barcode|
+        warn "loading requests" if $VERBOSE
         interface.load_requests(device_name, barcode)
       end
       protocol.on_result do |device_name, patient, order, result|

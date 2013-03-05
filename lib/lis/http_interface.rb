@@ -25,6 +25,8 @@ class LIS::HTTPInterface
       data = nil
     end
 
+    warn "data: #{data.inspect}" if $VERBOSE
+
     data
   end
 
@@ -62,7 +64,10 @@ class LIS::HTTPInterface
   def uri(device_name, barcode, action, test_name = nil)
     id = [device_name, barcode].join("-")
 
-    [@endpoint, id, action, test_name].compact.join("/")
+    s = [@endpoint, id, action, test_name].compact.join("/")
+    warn "uri: #{s}" if $VERBOSE
+
+    s
   end
 
 end
