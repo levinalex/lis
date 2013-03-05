@@ -42,9 +42,9 @@ class TestHTTPInterface < Test::Unit::TestCase
 
 
     should "return patient information and requests" do
-      stub_request( :get, "http://localhost/lis/LIS1-SOMETHING/requests").to_return(:status => 301, :headers => { 'Location' => "http://localhost/lis/LIS1-1234/requests" } )
+      stub_request( :get, "http://localhost/lis/LIS1-SOMETHING").to_return(:status => 301, :headers => { 'Location' => "http://localhost/lis/LIS1-1234" } )
 
-      result_stub = stub_request(:get, "http://localhost/lis/LIS1-1234/requests")
+      result_stub = stub_request(:get, "http://localhost/lis/LIS1-1234")
       result_stub.to_return( :status => 200, :body => @http_result, :headers => {})
       data = @interface.load_requests(@device_name, "SOMETHING")
 

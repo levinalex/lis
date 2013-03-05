@@ -17,7 +17,7 @@ class LIS::HTTPInterface
   #
   def load_requests(device_name, barcode)
     begin
-      result = RestClient.get(uri(device_name, barcode, "requests"))
+      result = RestClient.get(uri(device_name, barcode))
       data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
@@ -61,10 +61,10 @@ class LIS::HTTPInterface
 
   private
 
-  def uri(device_name, barcode, action, test_name = nil)
+  def uri(device_name, barcode, test_name = nil)
     id = [device_name, barcode].join("-")
 
-    s = [@endpoint, id, action, test_name].compact.join("/")
+    s = [@endpoint, id, test_name].compact.join("/")
     warn "uri: #{s}" if $VERBOSE
 
     s

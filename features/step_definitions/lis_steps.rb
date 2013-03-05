@@ -55,7 +55,7 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
              "id" => patient["id"],
              "types" => patient["test_names"].strip.split(/\s+/) }
 
-    stub_request(:get, "http://localhost/lis/#{device_name}-#{patient["id"]}/requests").
+    stub_request(:get, "http://localhost/lis/#{device_name}-#{patient["id"]}").
       to_return(:status => 200, :body => body.to_yaml, :headers => {})
   end
 end
