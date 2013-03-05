@@ -1,8 +1,50 @@
 #!/usr/bin/env ruby
-require 'gli'
-
 require 'lis'
 require 'lis/cli'
 
-exit LIS::CLI.run(ARGV.dup)
+Main {
+  version LIS::VERSION
+  description "LIS interface to Siemens Immulite 2000XPi or other similar analyzers"
+
+  option('verbose', 'v')
+
+  logger.formatter = proc { |severity, datetime, progname, msg|
+    "#{severity}: #{msg}\n"
+  }
+
+  mode "server" do
+    option('listen', 'l') {
+      arity 1
+      argument_required
+      default "/dev/ttyUSB0"
+    }
+
+    option('http', 'e') do
+      arity 1
+      required
+      argument_required
+      cast :uri
+    end
+
+
+    def run
+      $VERBOSE = true if params[:verbose].given?
+      portname = params[:listen].value
+      uri = params[:http].value
+
+      info "configuring port: #{portname}"
+      `stty -echo raw ospeed 9600 ispeed 9600 < #{portname}`
+
+      port = File.open(portname, "w+")
+
+      warn "listening on: #{portname}"
+
+      LIS::InterfaceServer.listen(port, uri).run!
+
+
+    end
+  end
+
+}
+
 
