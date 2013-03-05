@@ -51,7 +51,7 @@ Given /^the following requests are pending for (\w+):$/ do |device_name, table|
   table.hashes.each do |patient|
     body = { "patient" => { "last_name" => patient["last_name"],
                             "first_name" => patient["first_name"],
-                            "id" => patient["patient_id"]},
+                            "number" => patient["patient_id"]},
              "id" => patient["id"],
              "types" => patient["test_names"].strip.split(/\s+/) }
 

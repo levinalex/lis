@@ -6,7 +6,7 @@ module LIS
       end
 
       def patient_id
-        @data["patient"]["id"]
+        @data["patient"]["number"]
       end
       def patient_last_name
         @data["patient"]["last_name"]

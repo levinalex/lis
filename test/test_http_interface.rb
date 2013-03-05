@@ -34,7 +34,7 @@ class TestHTTPInterface < Test::Unit::TestCase
   context "requesting test" do
     setup do
       @http_result = { "id" => "1234",
-                        "patient" => { "id" => 98,
+                        "patient" => { "number" => 98,
                                        "last_name" => "Sierra",
                                        "first_name" => "Rudolph" },
                         "types" => [ "TSH", "FT3", "FT4" ] }.to_yaml
@@ -49,7 +49,7 @@ class TestHTTPInterface < Test::Unit::TestCase
       data = @interface.load_requests(@device_name, "SOMETHING")
 
       expected = { "id" => "SOMETHING",
-                   "patient" => { "id" => 98,
+                   "patient" => { "number" => 98,
                                   "last_name" => "Sierra",
                                   "first_name" => "Rudolph" },
                    "types" => [ "TSH", "FT3", "FT4" ] }
