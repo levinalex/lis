@@ -13,31 +13,27 @@ Main {
   }
 
   mode "server" do
-    option('listen', 'l') {
-      arity 1
-      argument_required
+    argument('port') {
       default "/dev/ttyUSB0"
     }
 
-    option('http', 'e') do
-      arity 1
-      required
-      argument_required
+    argument('http', 'e') do
       cast :uri
     end
 
 
     def run
       $VERBOSE = true if params[:verbose].given?
-      portname = params[:listen].value
+      portname = params[:port].value
       uri = params[:http].value
 
-      info "configuring port: #{portname}"
+      info "configuring port: #{portname} for 9600 baud"
       `stty -echo raw ospeed 9600 ispeed 9600 < #{portname}`
 
       port = File.open(portname, "w+")
 
       warn "listening on: #{portname}"
+      warn "http:         #{uri.to_s}"
 
       LIS::InterfaceServer.listen(port, uri).run!
 
