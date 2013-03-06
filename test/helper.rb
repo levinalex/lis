@@ -4,8 +4,6 @@ require 'webmock/test_unit'
 require 'shoulda'
 require 'mocha/setup'
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'lis'
 
 WebMock.disable_net_connect!
