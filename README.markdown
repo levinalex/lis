@@ -35,7 +35,7 @@ available][spec])
     ---
     id: '1234'
     patient:
-      id: 98
+      number: 98
       last_name: Sierra
       first_name: Rudolph
     types:
@@ -58,6 +58,25 @@ available][spec])
     unit: mIU/mL
     value: '8.2'
     ```
+
+## Changes
+
+### 0.4.5 (2013-03-06)
+
+* switched to using HTTParty from RestClient
+
+### 0.4.4
+
+* patient id is read from `patient/number` not `patient/id`
+* switched command line tool to use Main, not GLI
+
+### 0.4
+
+* changed the HTTP Interface:
+
+  * Requests now are at `{base_url}/{device_name}-{specimen_id}`
+  * Results are posted to `{base_url}/{device_name}-{specimen_id}/{test_id}`
+
 
 ## Copyright
 
