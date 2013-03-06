@@ -1,0 +1,12 @@
+[Unit]
+Description=LIS
+ConditionPathExists=/dev/ttyUSB0
+After=network.target
+
+[Service]
+ExecStart=lis server -v /dev/ttyUSB0 http://lis.example/lis
+Restart=always
+User=user
+
+[Install]
+WantedBy=multi-user.target
