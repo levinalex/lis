@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require 'rest-client'
+require 'httparty'
 
 class LIS::HTTPInterface
   def initialize(endpoint)
@@ -17,7 +17,7 @@ class LIS::HTTPInterface
   #
   def load_requests(device_name, barcode)
     begin
-      result = RestClient.get(uri(device_name, barcode))
+      result = HTTParty.get(uri(device_name, barcode))
       data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
@@ -51,7 +51,7 @@ class LIS::HTTPInterface
 
     # FIXME: WTF: should not just catch everything
     begin
-      res = RestClient.post(uri(device_name, barcode, order.universal_test_id), data)
+      res = HTTParty.post(uri(device_name, barcode, order.universal_test_id), :body => data)
     rescue Exception => e
       puts "EXCEPTION"
       p e
