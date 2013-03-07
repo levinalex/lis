@@ -39,7 +39,7 @@ module LIS::Message
     has_field 13, :test_completed_at, :type => :timestamp
 
     def raw_data
-      to_message
+      Base64.encode64(to_message)
     end
 
     def universal_test_id

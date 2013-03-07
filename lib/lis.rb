@@ -1,5 +1,7 @@
 require 'packet_io'
 require 'yaml'
+require 'json'
+require 'base64'
 
 require 'lis/version'
 require 'lis/messages.rb'

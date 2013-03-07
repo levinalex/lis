@@ -23,7 +23,10 @@ class TestHTTPInterface < Test::Unit::TestCase
                         "test_name"=>"TSTID",
                         "unit"=>"mIU/mL",
                         "value"=>"8.2",
-                        "raw"=>@string}).
+                        "raw" => Base64.encode64(@string)
+                      },
+              :headers => { 'Accept' => 'application/json',
+                            'Content-Type' => 'application/json' }).
         to_return(:status => 200, :body => "", :headers => {})
 
       @interface.send_result(@device_name, @order, @result)

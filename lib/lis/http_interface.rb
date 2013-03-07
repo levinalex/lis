@@ -3,6 +3,13 @@
 require 'httparty'
 
 class LIS::HTTPInterface
+  class HTTP
+    include HTTParty
+    format :json
+    headers 'Accept' => 'application/json', 'Content-Type' => 'application/json'
+  end
+
+
   def initialize(endpoint)
     @endpoint = endpoint
   end
@@ -17,15 +24,13 @@ class LIS::HTTPInterface
   #
   def load_requests(device_name, barcode)
     begin
-      result = HTTParty.get(uri(device_name, barcode))
+      result = HTTP.get(uri(device_name, barcode))
       data = LIS::Data::Request.from_yaml(result.body, barcode)
     rescue Exception => e
       puts e
       puts e.backtrace
       data = nil
     end
-
-    warn "data: #{data.inspect}" if $VERBOSE
 
     data
   end
@@ -51,7 +56,7 @@ class LIS::HTTPInterface
 
     # FIXME: WTF: should not just catch everything
     begin
-      res = HTTParty.post(uri(device_name, barcode, order.universal_test_id), :body => data)
+      res = HTTP.post(uri(device_name, barcode, order.universal_test_id), :body => data.to_json)
     rescue Exception => e
       puts "EXCEPTION"
       p e
