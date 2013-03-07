@@ -70,7 +70,6 @@ class LIS::HTTPInterface
     id = [device_name, barcode].join("-")
 
     s = [@endpoint, id, test_name].compact.join("/")
-    warn "uri: #{s}" if $VERBOSE
 
     s
   end

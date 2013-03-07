@@ -1,8 +1,5 @@
 # encoding: UTF-8
 
-
-
-
 Given /^LIS Interface listening for messages$/ do
   @client, @r, @w = PacketIO::Test::MockServer.build
   @io = PacketIO::IOListener.new(@r, @w)
