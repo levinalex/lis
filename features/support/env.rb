@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
 
 require 'lis'
 
-require 'mocha'
+require 'mocha/setup'
 require 'yaml'
 require 'aruba/cucumber'
 
