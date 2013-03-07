@@ -16,16 +16,16 @@ module LIS::Transfer
   # - :idle            :: when a transmission is finished (after EOT is received)
   #
   class ASTM::E1394 < ::PacketIO::Base
+    EOT = "\004"
+    ENQ = "\005"
     ACK = "\006"
     NAK = "\025"
-    ENQ = "\005"
-    EOT = "\004"
 
     # format of a message
     RX = /(?:
-          \005 | # ENQ - start a transaction
           \004 | # EOT - ends a transaction
-          \005 | # ACK
+          \005 | # ENQ - start a transaction
+          \006 | # ACK
           \025 | # NAK
           (?:\002 (.) (.*?) \015 \003 (.+?) \015 \012) # a message with a checksum
                 #  |   |               `-- checksum
