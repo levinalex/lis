@@ -6,6 +6,8 @@ require 'mocha/setup'
 
 require 'lis'
 
+$VERBOSE = true
+
 WebMock.disable_net_connect!
 
 class Test::Unit::TestCase
