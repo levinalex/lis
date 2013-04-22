@@ -54,13 +54,7 @@ class LIS::HTTPInterface
       "raw" => result.raw_data
     }
 
-    # FIXME: WTF: should not just catch everything
-    begin
-      res = HTTP.post(uri(device_name, barcode, order.universal_test_id), :body => data.to_json)
-    rescue Exception => e
-      puts "EXCEPTION"
-      p e
-    end
+    HTTP.post(uri(device_name, barcode, order.universal_test_id), :body => data.to_json)
   end
 
 
