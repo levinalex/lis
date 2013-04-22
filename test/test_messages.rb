@@ -1,10 +1,12 @@
+# encoding: utf-8
+
 require 'helper'
 
 class TestMessages < Test::Unit::TestCase
 
   context "parsing an order message" do
     setup do
-      @str = "O|1|8780||^^^ATA|R|||||||||||||||||||B0135"
+      @str = "O|1|8780||^^^ATA|R|||||||||||||||||||B0135".force_encoding("ASCII-8BIT")
       @message = LIS::Message::Base.from_string(@str)
     end
 
@@ -24,7 +26,7 @@ class TestMessages < Test::Unit::TestCase
 
   context "parsing a comment message" do
     setup do
-      @str = "C|1|BAD_QC|"
+      @str = "C|1|BAD_QC|".force_encoding("ASCII-8BIT")
       @message = LIS::Message::Base.from_string(@str)
     end
 
@@ -33,9 +35,26 @@ class TestMessages < Test::Unit::TestCase
     end
   end
 
+  context "parsing a patient message" do
+    setup do
+      @str = "P|1|123||123|Müller^Ulrich Peter||||||||".force_encoding("ASCII-8BIT")
+      @message = LIS::Message::Base.from_string(@str)
+    end
+
+    should "have correct type" do
+      assert_equal LIS::Message::Patient, @message.class
+      assert_equal "P", @message.type_id
+    end
+
+    should "have correct name" do
+      assert_equal "Müller^Ulrich Peter".force_encoding("ASCII-8BIT"), @message.name # FIXME, this should be utf8
+    end
+
+  end
+
   context "parsing a result message" do
     setup do
-      @str = "R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135"
+      @str = "R|1|^^^TSH|0.902|mIU/L|0.400\\0.004^4.00\\75.0|N|N|R|||20100115105636|20100115120641|B0135".force_encoding("ASCII-8BIT")
       @message = LIS::Message::Base.from_string(@str)
     end
 
@@ -65,7 +84,7 @@ class TestMessages < Test::Unit::TestCase
     end
 
     should "parse empty result messages without error" do
-      @message = LIS::Message::Base.from_string("R|1|^^^||||||X|||||LIAISON")
+      @message = LIS::Message::Base.from_string("R|1|^^^||||||X|||||LIAISON".force_encoding("ASCII-8BIT"))
       assert_equal LIS::Message::Result, @message.class
     end
   end

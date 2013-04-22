@@ -74,7 +74,7 @@ class TestPacketizedProtocol < Test::Unit::TestCase
     end
 
     should "propagate only packet data" do
-      @str = "\0023L|1\r\0033C\r\n"
+      @str = "\0023L|1\r\0033C\r\n".force_encoding("ASCII-8BIT")
       @protocol.receive("\005")
       @protocol.receive(@str)
       @protocol.receive("\004")
