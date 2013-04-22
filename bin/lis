@@ -26,6 +26,8 @@ Main {
       portname = params[:port].value
       uri = params[:http].value
 
+      info "#{$0} #{LIS::VERSION}"
+
       info "configuring port: #{portname} for 9600 baud"
       `stty -echo raw ospeed 9600 ispeed 9600 < #{portname}`
 
