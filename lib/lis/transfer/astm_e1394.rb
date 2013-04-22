@@ -32,7 +32,7 @@ module LIS::Transfer
                 #  |   `------------------ message
                 #  `---------------------- frame number
           )
-        /xm
+        /xmn
 
     def initialize(*args)
       super(*args)
