@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "httparty"
   s.add_dependency "rake"
   s.add_dependency "main"
+  s.add_dependency "json"
 
   s.add_development_dependency("shoulda", ">= 3.1.0")
   s.add_development_dependency("mocha", ">= 0.12.0")
