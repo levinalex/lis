@@ -60,12 +60,12 @@ end
 
 Then /^LIS should have sent test orders to client:$/ do |text|
   @data = @client.read_all
-  @data.force_encoding("utf-8") if @data.respond_to?(:force_encoding)
-  @packets = @data.split("\002").select { |s| s =~ /^\d[A-Z]/ }
+  @data.force_encoding("ASCII-8BIT") if @data.respond_to?(:force_encoding)
+  @packets = @data.split("\002").select { |s| s =~ /^\d[A-Z]/n }
   @packets.zip(text.split(/\n/)) do |actual, expected|
     @called = true
-    rx =  Regexp.new("^" + Regexp.escape(expected.strip))
-    assert_match(rx, actual.gsub(/\r\003.*$/, "").strip)
+    rx =  Regexp.new("^" + Regexp.escape(expected.strip.force_encoding('ASCII-8BIT')), Regexp::NOENCODING)
+    assert_match(rx, actual.gsub(/\r\003.*$/n, "").strip)
   end
   assert_equal(true, @called)
 end
