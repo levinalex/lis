@@ -90,11 +90,6 @@ module LIS::Transfer
       end
     end
 
-    def write(type, message=nil)
-      warn "[S] #{message}" if type == :message and $VERBOSE
-      super
-    end
-
     # @yield data
     def sending_session(data)
       # don't send anything if there are no pending requests
