@@ -21,7 +21,6 @@ Main {
       cast :uri
     end
 
-
     def run
       $VERBOSE = true if params[:verbose].given?
       portname = params[:port].value
@@ -36,8 +35,10 @@ Main {
       warn "http:         #{uri.to_s}"
 
       LIS::InterfaceServer.listen(port, uri).run!
-
-
+    rescue Exception => e
+      fatal { e.message }
+      e.backtrace.each do |l| warn l end
+      raise
     end
   end
 
