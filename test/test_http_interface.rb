@@ -36,13 +36,13 @@ class TestHTTPInterface < Test::Unit::TestCase
 
   context "posting a result" do
     setup do
-      @order = LIS::Message::Order.from_string("O|1|RV-HM-3/13 B||^^^TSH|R|||||||||||||||||||DPCCIRRUS")
+      @order = LIS::Message::Order.from_string("O|1|RV-3/13 A||^^^TSH|R|||||||||||||||||||DPCCIRRUS")
       @string = %q(R|1|^^^TSH|1,14|mIU/L|0,400\0,004^4,00\75,0|N|N|F|||19931011091233|19931011091233|DPCCIRRUS)
       @result = LIS::Message::Result.from_string(@string)
     end
 
     should "post correct data to the HTTP endpoint" do
-      result_stub = stub_request(:post, "http://localhost/lis/LIS1-RV-HM-3_13_B/TSH").
+      result_stub = stub_request(:post, "http://localhost/lis/LIS1-RV-313A/TSH").
         with(:body => { "flags"=>"N",
                         "result_timestamp"=>"1993-10-11T09:12:33+00:00",
                         "status"=>"F",
