@@ -1,24 +1,15 @@
-## MAC OS
-.DS_Store
-
-## TEXTMATE
-*.tmproj
-tmtags
-
-## EMACS
-*~
-\#*
-.\#*
-
-## VIM
 *.swp
-
-## PROJECT::GENERAL
-coverage
-rdoc
-pkg
+*.tmproj
+*~
+.DS_Store
+.\#*
+.ruby-version
 .yardoc
-doc
-
-## PROJECT::SPECIFIC
 Gemfile.lock
+\#*
+coverage
+doc
+pkg
+rdoc
+tags
+tmtags
