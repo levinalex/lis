@@ -61,7 +61,8 @@ class LIS::HTTPInterface
   private
 
   def uri(device_name, barcode, test_name = nil)
-    id = [device_name, barcode].join("-")
+    barcode = barcode.to_s.gsub(/[\s\/]+/,'_').gsub(/[^a-z0-9_-]/i,'')
+    id = [device_name, URI.encode(barcode)].join("-")
 
     s = [@endpoint, id, test_name].compact.join("/")
 

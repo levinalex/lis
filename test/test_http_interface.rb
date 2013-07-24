@@ -34,6 +34,34 @@ class TestHTTPInterface < Test::Unit::TestCase
     end
   end
 
+  context "posting a result" do
+    setup do
+      @order = LIS::Message::Order.from_string("O|1|RV-HM-3/13 B||^^^TSH|R|||||||||||||||||||DPCCIRRUS")
+      @string = %q(R|1|^^^TSH|1,14|mIU/L|0,400\0,004^4,00\75,0|N|N|F|||19931011091233|19931011091233|DPCCIRRUS)
+      @result = LIS::Message::Result.from_string(@string)
+    end
+
+    should "post correct data to the HTTP endpoint" do
+      result_stub = stub_request(:post, "http://localhost/lis/LIS1-RV-HM-3_13_B/TSH").
+        with(:body => { "flags"=>"N",
+                        "result_timestamp"=>"1993-10-11T09:12:33+00:00",
+                        "status"=>"F",
+                        "test_name"=>"TSH",
+                        "unit"=>"mIU/L",
+                        "value"=>"1,14",
+                        "raw" => Base64.encode64(@string)
+                      },
+              :headers => { 'Accept' => 'application/json',
+                            'Content-Type' => 'application/json' }).
+        to_return(:status => 200, :body => "", :headers => {})
+
+      @interface.send_result(@device_name, @order, @result)
+      assert_requested(result_stub)
+    end
+
+  end
+
+
   context "requesting test" do
     setup do
       @http_result = { "id" => "1234",
