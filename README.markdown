@@ -1,5 +1,7 @@
 # LIS
 
+[![Build Status](https://travis-ci.org/levinalex/lis.svg?branch=master)](https://travis-ci.org/levinalex/lis)
+
 A simple interface to medical laboratory instruments. It implements a rough subset of ASTM E1394-97 (or, possibly CLSI LIS02-A2)
 
 It listens for test requests and results and forwards them via HTTP.  It is intended to interface with the [worklist_manager](http://github.com/levinalex/worklist_manager) web application.

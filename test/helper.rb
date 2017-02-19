@@ -1,15 +1,11 @@
-require 'rubygems'
 require 'test/unit'
+require 'shoulda-context'
+require 'webmock'
 require 'webmock/test_unit'
-require 'shoulda'
-require 'mocha/setup'
 
 require 'lis'
 
 $VERBOSE = true
 
 WebMock.disable_net_connect!
-
-class Test::Unit::TestCase
-end
 
