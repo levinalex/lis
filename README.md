@@ -63,6 +63,11 @@ available][spec])
 
 ## Changes
 
+### 0.5.0 (2017-02-19)
+
+* update dependencies
+* test on modern rubies (2.0 to 2.4)
+
 ### 0.4.5 (2013-03-06)
 
 * switched to using HTTParty from RestClient
@@ -82,4 +87,4 @@ available][spec])
 
 ## Copyright
 
-Copyright (c) 2010-2013 Levin Alexander. See LICENSE for details.
+Copyright (c) 2010-2017 Levin Alexander. See LICENSE for details.
