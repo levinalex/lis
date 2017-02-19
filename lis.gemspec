@@ -20,17 +20,18 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.summary = %q{LIS interface to Siemens Immulite 2000XPi or other similar analyzers}
 
-  s.add_dependency "packet_io", ">= 0.4.2"
-  s.add_dependency "httparty"
-  s.add_dependency "rake"
-  s.add_dependency "main"
-  s.add_dependency "json"
+  s.add_dependency "packet_io", "~> 0.4.3"
+  s.add_dependency "httparty", "~> 0.14.0"
+  s.add_dependency "rake", "~> 12.0.0"
+  s.add_dependency "main", "~> 6.2.2"
+  s.add_dependency "json", "~> 2.0.3"
 
-  s.add_development_dependency("shoulda", ">= 3.1.0")
-  s.add_development_dependency("mocha", ">= 0.12.0")
-  s.add_development_dependency("yard")
-  s.add_development_dependency("cucumber", ">= 1.2.0")
-  s.add_development_dependency("webmock", ">= 1.8.7")
-  s.add_development_dependency('aruba')
+  s.add_development_dependency("shoulda", "~> 3.5")
+  s.add_development_dependency("mocha", "~> 1.2.1")
+  s.add_development_dependency("yard", "~> 0.9.8")
+  s.add_development_dependency("cucumber", "~> 2.4.0")
+  s.add_development_dependency("webmock", "~> 2.3.2")
+  s.add_development_dependency("aruba", "~> 0.14.2")
+  s.add_development_dependency("test-unit", "~> 3.2.3" )
 end
 
