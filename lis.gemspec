@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
   s.name = %q{lis}
   s.version = LIS::VERSION
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Levin Alexander"]
   s.description = %q{}
   s.email = %q{mail@levinalex.net}
@@ -26,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "main", "~> 6.2.2"
   s.add_dependency "json", "~> 2.0.3"
 
-  s.add_development_dependency("shoulda", "~> 3.5")
+  s.add_development_dependency("shoulda-context", "~> 1.2.2")
   s.add_development_dependency("mocha", "~> 1.2.1")
   s.add_development_dependency("yard", "~> 0.9.8")
   s.add_development_dependency("cucumber", "~> 2.4.0")

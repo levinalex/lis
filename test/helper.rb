@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'shoulda'
+require 'shoulda-context'
 require 'webmock'
 require 'webmock/test_unit'
 
