@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ["Levin Alexander"]
   s.description = %q{}
   s.email = %q{mail@levinalex.net}
+  s.license = "MIT"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
